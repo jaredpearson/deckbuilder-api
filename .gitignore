@@ -1,0 +1,13 @@
+
+#mac dust
+.DS_Store
+
+#eclipse junk
+/.classpath
+/.project
+/.settings
+/bin
+/build
+
+#gradle junk
+/.gradle
