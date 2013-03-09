@@ -27,7 +27,7 @@ export DATABASE_URL=hsqldb:file:~/.deckbuilderapi/db/dbmain;create=true
 After the environment variable is set, the database DDL can be creating using the following
 
 ````
-java deckbuilder.mtg.http.HttpServerMain dbinit
+java deckbuilder.mtg.Main dbinit
 ````
 
 ### Default administrators
@@ -58,7 +58,7 @@ In order for the server to start, there needs to be the following environment va
 The server can be started using the following commands
 
 ````
-java deckbuilder.mtg.http.HttpServerMain run
+java deckbuilder.mtg.Main run
 ````
 
 ## Requests
