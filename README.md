@@ -20,15 +20,15 @@ The server is setup to use HSQLDB, which passes connection information through t
 
 To create a database in your home directory set the following environment variable
 
-````
+```sh
 export DATABASE_URL=hsqldb:file:~/.deckbuilderapi/db/dbmain;create=true
-````
+```
 
 After the environment variable is set, the database DDL can be creating using the following
 
-````
+```sh
 java deckbuilder.mtg.Main dbinit
-````
+```
 
 ### Importing Set Data
 
@@ -36,9 +36,9 @@ If you need to import a set of cards, the easiest way is to use the `dbimportset
 
 For example, if a set of cards needs to be imported, the following command can be executed.
 
-````
+```sh
 java deckbuilder.mtg.Main dbimportsets ~/testset.json
-````
+```
 
 Where `~/testset.json` contains the following: 
 
@@ -81,9 +81,9 @@ In order for the server to start, there needs to be the following environment va
 
 The server can be started using the following commands
 
-````
+```sh
 java deckbuilder.mtg.Main run
-````
+```
 
 ## Requests
 
@@ -91,17 +91,17 @@ Making a request to the server requires the client to pass their Facebook Access
 
 The format of the `Authorization` HTTP Header is as follows.
 
-````
+```sh
 Authorization: Facebook-Access-Token <access token>
-````
+```
 
 ### Obtaining an Access Token
 
 To simplify development, a basic Access Token servlet is provided. After starting the server, open a browser to the following URL.
 
-````
+```sh
 http://localhost:8080/facebook/auth
-````
+```
 
 The page should redirect to the Facebook OAuth login page. After signing-in using a valid Facebook user, the user will be redirected back to the app, which displays the Access Token to use when using the service.
 
