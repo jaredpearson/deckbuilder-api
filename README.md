@@ -30,6 +30,30 @@ After the environment variable is set, the database DDL can be creating using th
 java deckbuilder.mtg.Main dbinit
 ````
 
+### Importing Set Data
+
+If you need to import a set of cards, the easiest way is to use the `dbimportset` command. The command takes any number of arguments which are paths to files containing JSON card data.
+
+For example, if a set of cards needs to be imported, the following command can be executed.
+
+````
+java deckbuilder.mtg.Main dbimportsets ~/testset.json
+````
+
+Where `~/testset.json` contains the following: 
+
+```json
+{
+	"language": "en",
+	"abbreviation": "OBL",
+	"name": "Oblivion",
+	"cards": [
+		{"index": "1", "name": "Guantlet of Darkness", "typeLine": "Equipment", "powerToughness": null, "castingCost": "1"},
+		{"index": "2", "name": "Human", "typeLine": "Creature", "powerToughness": "1/1", "castingCost": "W"}
+	]
+}
+```
+
 ### Default administrators
 
 Whenever a user successfully authenticates for the first time, a user account is created. If the username is found within the default administrators, they will be given the administrator permission. As an administrator, the user is able to add or modify data within the system that is restricted to a standard user.
