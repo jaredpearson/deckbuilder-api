@@ -1,20 +1,20 @@
-# Deckbuilder API
+Deckbuilder API
 
 The Deckbuilder API project is a REST-styled API for storing information about Magic The Gathering decks. Authenitcation uses the Facebook Login API, so users will need a Facebook account to use the service. Since Facebook access tokens are sent in the HTTP header, an SSL connection is highly recommended.
 
 Due to trademark and copyright concerns, no card information is supplied.
 
-# Server Setup
+## Server Setup
 
-## Configuration properties
+### Configuration properties
 
 On start the server will try to resolve configuration properties at `/src/main/resources/deckbuilder/mtg/config.properties`. No default configuration is included but a blank configuration is included at `/src/main/resources/deckbuilder/mtg/config-blank.properties`. Duplicate (or change the name) to `config.properties`.
 
-## Facebook Setup
+### Facebook Setup
 
 Authentication is provided through Facebook Login so an application will need to be registered through <a href="https://developers.facebook.com/">Facebook Developers</a>. After setting up an account, click the "Create New App" button. Follow the setup for a new "Website with Facebook Login" application. Make note of the App ID and App Secret.
 
-## Initializing the database
+### Initializing the database
 
 The server is setup to use HSQLDB, which passes connection information through the `DATABASE_URL` environment variable.
 
@@ -26,15 +26,17 @@ export DATABASE_URL=hsqldb:file:~/.deckbuilderapi/db/dbmain;create=true
 
 After the environment variable is set, the database DDL can be creating using the following
 
-`java deckbuilder.mtg.http.HttpServerMain dbinit`
+````
+java deckbuilder.mtg.http.HttpServerMain dbinit
+````
 
-## Default administrators
+### Default administrators
 
 Whenever a user successfully authenticates for the first time, a user account is created. If the username is found within the default administrators, they will be given the administrator permission. As an administrator, the user is able to add or modify data within the system that is restricted to a standard user.
 
 Open the file `/src/main/resources/deckbuilder/mtg/config.properties` and add the user's Facebook username to the `administrators` property. This is a comma-separated list so any number of users can be added.
 
-## Starting the server
+### Starting the server
 
 In order for the server to start, there needs to be the following environment variables setup.
 
@@ -55,27 +57,33 @@ In order for the server to start, there needs to be the following environment va
 
 The server can be started using the following commands
 
-`java deckbuilder.mtg.http.HttpServerMain run`
+````
+java deckbuilder.mtg.http.HttpServerMain run
+````
 
-# Requests
+## Requests
 
 Making a request to the server requires the client to pass their Facebook Access Token through the `Authorization` header. An Access Token can be retrieved after performing a standard OAuth2 authentication with Facebook Login.
 
 The format of the `Authorization` HTTP Header is as follows.
 
-`Authorization: Facebook-Access-Token <access token>`
+````
+Authorization: Facebook-Access-Token <access token>
+````
 
-## Obtaining an Access Token
+### Obtaining an Access Token
 
 To simplify development, a basic Access Token servlet is provided. After starting the server, open a browser to the following URL.
 
-`http://localhost:8080/facebook/auth'
+````
+http://localhost:8080/facebook/auth
+````
 
 The page should redirect to the Facebook OAuth login page. After signing-in using a valid Facebook user, the user will be redirected back to the app, which displays the Access Token to use when using the service.
 
-# API Information
+## API Information
 
-## Card Set
+### Card Set
 
 <table>
 	<tr>
@@ -100,7 +108,7 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 	</tr>
 </table>
 
-## Card
+### Card
 
 <table>
 	<tr>
@@ -115,7 +123,7 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 	</tr>
 </table>
 
-## Deck
+### Deck
 
 <table>
 	<tr>
@@ -145,7 +153,7 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 	</tr>
 </table>
 
-# Deck Card
+### Deck Card
 
 This is an instance of a card within a deck (along with a given quantity). For example, if there are four copies of the same card found within a deck, the Deck Card will have a quantity of four.
 
