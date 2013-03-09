@@ -11,3 +11,6 @@
 
 #gradle junk
 /.gradle
+
+#configuration
+/src/main/resources/deckbuilder/mtg/config.properties

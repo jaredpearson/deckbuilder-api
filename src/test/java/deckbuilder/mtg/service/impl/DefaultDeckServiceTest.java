@@ -1,0 +1,97 @@
+package deckbuilder.mtg.service.impl;
+
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import deckbuilder.mtg.db.JpaPersistenceTest;
+import deckbuilder.mtg.entities.Deck;
+import deckbuilder.mtg.entities.User;
+
+public class DefaultDeckServiceTest extends JpaPersistenceTest{
+	@Test
+	public void testList() throws Exception {
+		User user = createTestUser();
+		
+		Deck deck = new Deck();
+		deck.setOwner(user);
+		entityManager.persist(deck);
+		entityManager.flush();
+
+		DefaultDeckService service = new DefaultDeckService();
+		service.entityManagerProvider = entityManagerProvider;
+		List<Deck> decks = service.getDecksForOwner(user.getId());
+		
+		Assert.assertEquals("Expected list to return all available decks", 1, decks.size());
+		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId(), decks.get(0).getId());
+	}
+	
+	@Test
+	public void testCreateDeck() throws Exception {
+		User user = createTestUser();
+		entityManager.flush();
+
+		Deck deckData = new Deck();
+		deckData.setName("Test");
+		deckData.setOwner(user);
+		
+		DefaultDeckService service = new DefaultDeckService();
+		service.entityManagerProvider = entityManagerProvider;
+		Deck saveResponse = service.createDeck(deckData);
+		
+		Assert.assertNotNull("Expected createDeck to return a save response.", saveResponse);
+		
+		Long newDeckId = saveResponse.getId();
+		Assert.assertNotNull("Expected the save response to return the deck ID", newDeckId);
+		
+		Deck deck = entityManager.find(Deck.class, newDeckId);
+		Assert.assertNotNull("Expected the createDeck method to create a deck", deck);
+	}
+	
+	@Test
+	public void testDeleteDeck() throws Exception {
+		User owner = createTestUser();
+		
+		Deck deck = new Deck();
+		deck.setOwner(owner);
+		entityManager.persist(deck);
+		entityManager.flush();
+
+		DefaultDeckService service = new DefaultDeckService();
+		service.entityManagerProvider = entityManagerProvider;
+		service.deleteDeck(deck.getId());
+		
+		entityManager.flush();
+		Deck actual = entityManager.find(Deck.class, deck.getId());
+		Assert.assertNull("Expected the deck to be deleted", actual);
+	}
+	
+	@Test
+	public void testUpdateDeck() throws Exception {
+		User owner = createTestUser();
+		
+		Deck deck = new Deck();
+		deck.setOwner(owner);
+		entityManager.persist(deck);
+		entityManager.flush();
+		
+		//change the deck name
+		deck.setName("New Name!");
+
+		DefaultDeckService service = new DefaultDeckService();
+		service.entityManagerProvider = entityManagerProvider;
+		service.updateDeck(deck);
+		
+		Deck actualDeck = entityManager.find(Deck.class, deck.getId());
+		Assert.assertNotNull("Expected the deck to be found with the ID", actualDeck);
+		Assert.assertEquals("Expected the name of the deck to have changed after the update", deck.getName(), actualDeck.getName());
+	}
+	
+	private User createTestUser() {
+		User owner = new User();
+		entityManager.persist(owner);
+		return owner;
+	}
+	
+}

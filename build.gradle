@@ -1,0 +1,38 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile     'org.eclipse.jetty:jetty-server:8.1.7.v20120910'
+	compile     'org.eclipse.jetty:jetty-servlet:8.1.7.v20120910'
+	
+	compile     'com.sun.jersey:jersey-core:1.12'
+	compile     'com.sun.jersey:jersey-server:1.12'
+	compile     'com.sun.jersey:jersey-servlet:1.12'
+	compile     'com.sun.jersey:jersey-json:1.12'
+	compile     'com.sun.jersey.contribs:jersey-guice:1.12'
+	compile     'javax.ws.rs:jsr311-api:1.1.1'
+	
+    compile     'org.hibernate:hibernate-core:4.1.10.Final'
+    compile     'org.hibernate:hibernate-entitymanager:4.1.10.Final'
+    compile     'org.hibernate:hibernate-c3p0:4.1.10.Final'
+    	
+	compile     'org.hsqldb:hsqldb:2.2.8'
+	compile     'commons-dbutils:commons-dbutils:1.5'
+	
+	compile     'com.google.guava:guava:13.0.1'
+	
+	compile     'com.google.inject:guice:3.0'
+	compile     'com.google.inject.extensions:guice-servlet:3.0'
+    compile     'com.google.inject.extensions:guice-persist:3.0'
+    
+    compile     'org.codehaus.jackson:jackson-core-asl:1.9.2'
+    compile     'org.codehaus.jackson:jackson-mapper-asl:1.9.2'
+	
+    testCompile 'junit:junit:4.+'
+    testCompile 'org.mockito:mockito-core:1.8.0'
+}
