@@ -1,4 +1,4 @@
-Deckbuilder API
+# Deckbuilder API
 
 The Deckbuilder API project is a REST-styled API for storing information about Magic The Gathering decks. Authenitcation uses the Facebook Login API, so users will need a Facebook account to use the service. Since Facebook access tokens are sent in the HTTP header, an SSL connection is highly recommended.
 
