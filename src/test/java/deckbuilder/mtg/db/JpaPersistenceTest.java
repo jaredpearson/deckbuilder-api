@@ -37,19 +37,7 @@ public abstract class JpaPersistenceTest {
 			(new DatabaseService(dataSource)).initializeSchema();
 			schemaInitialized = true;
 		}
-		
-		emf = Persistence.createEntityManagerFactory("deckbuilder.mtg");
-	}
 
-	@AfterClass
-	public static void afterSuite() throws Exception {
-		if(emf.isOpen()) {
-			emf.close();
-		}
-	}
-
-	@Before
-	public void initialize() throws Exception {
 		HashMap<String, String> properties = new HashMap<String, String>();
 	    properties.put("javax.persistence.jdbc.driver", "org.hsqldb.jdbcDriver");
 	    properties.put("javax.persistence.jdbc.url", DATABASE_URL);
@@ -57,8 +45,20 @@ public abstract class JpaPersistenceTest {
 	    properties.put("javax.persistence.jdbc.password", "");
 	    properties.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 	    properties.put("hibernate.show_sql", "true");
+		emf = Persistence.createEntityManagerFactory("deckbuilder.mtg", properties);
+	}
+
+	@AfterClass
+	public static void afterSuite() throws Exception {
+		if(emf != null && emf.isOpen()) {
+			emf.close();
+		}
+	}
+
+	@Before
+	public void initialize() throws Exception {
 		
-	    entityManager = emf.createEntityManager(properties);
+	    entityManager = emf.createEntityManager();
 	    entityManagerProvider = new Provider<EntityManager>() {
 			@Override
 			public EntityManager get() {
