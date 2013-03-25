@@ -4,6 +4,10 @@ The Deckbuilder API project is a REST-styled API for storing information about M
 
 Due to trademark and copyright concerns, no card information is supplied.
 
+## Legal
+
+This application is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC. This application may use the trademarks and other intellectual property of Wizards of the Coast LLC, which is permitted under Wizards' Fan Site Policy (http://company.wizards.com/fankit). For example, MAGIC: THE GATHERING® is a trademark[s] of Wizards of the Coast. For more information about Wizards of the Coast or any of Wizards' trademarks or other intellectual property, please visit their website at (www.wizards.com).
+
 ## Server Setup
 
 ### Configuration properties
