@@ -26,6 +26,8 @@ import com.google.inject.Inject;
 
 public class DatabaseService {
 	private static final Logger logger = Logger.getLogger(DatabaseService.class.getName());
+	private static final String PATH_PREFIX_JAR = "jar:";
+	private static final String FILE_PREFIX_JAR = "file:";
 	private DataSource dataSource;
 	
 	@Inject
@@ -33,13 +35,10 @@ public class DatabaseService {
 		this.dataSource = dataSource;
 	}
 	
+	/**
+	 * Initializes the database with the schema.
+	 */
 	public void initializeSchema() throws SQLException, IOException {
-		try(Connection cnn = dataSource.getConnection()) {
-			initializeSchema(cnn);
-		}
-	}
-
-	public void initializeSchema(Connection cnn) throws SQLException, IOException {
 		//list of ddl scripts to be executed in order
 		String ddlDir = "/deckbuilder/mtg/db/";
 		String[] ddlScripts = new String[]{
@@ -50,19 +49,21 @@ public class DatabaseService {
 			"deckcards.sql"
 		};
 		ScriptParser scriptParser = new ScriptParser();
-		try(Statement stmt = cnn.createStatement()) {
-			for(String ddlScript : ddlScripts) {
-				logger.fine("Executing " + ddlScript);
-				String fullScriptPath = ddlDir + ddlScript;
-				try(InputStream inputStream = DatabaseService.class.getResourceAsStream(fullScriptPath)) {
-					if(inputStream == null) {
-						throw new RuntimeException("Unable to find DDL script at path: " + fullScriptPath);
-					}
-					
-					try(InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
-						String script = CharStreams.toString(inputStreamReader);
-						for(String statement : scriptParser.parseScript(script)) {
-							stmt.execute(statement);
+		try(Connection cnn = dataSource.getConnection()) {
+			try(Statement stmt = cnn.createStatement()) {
+				for(String ddlScript : ddlScripts) {
+					logger.fine("Executing " + ddlScript);
+					String fullScriptPath = ddlDir + ddlScript;
+					try(InputStream inputStream = DatabaseService.class.getResourceAsStream(fullScriptPath)) {
+						if(inputStream == null) {
+							throw new RuntimeException("Unable to find DDL script at path: " + fullScriptPath);
+						}
+						
+						try(InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
+							String script = CharStreams.toString(inputStreamReader);
+							for(String statement : scriptParser.parseScript(script)) {
+								stmt.execute(statement);
+							}
 						}
 					}
 				}
@@ -70,51 +71,52 @@ public class DatabaseService {
 		}
 	}
 	
+	/**
+	 * Imports the files at the given paths as Set data.
+	 * <p>
+	 * The format of each file is a JSON file.
+	 */
 	public void importSets(String[] setPaths) throws SQLException, IOException {
 		try(Connection cnn = dataSource.getConnection()) {
-			importSets(cnn, setPaths);
-		}
-	}
-	
-	public void importSets(Connection cnn, String[] setPaths) throws SQLException, IOException {
-		for(String setPath : setPaths) {
-			
-			try(InputStream inputStream = openInputStreamFromPath(setPath)) {
-				ObjectMapper mapper = new ObjectMapper();
-				JsonNode setNode = mapper.readTree(inputStream);
+			for(String setPath : setPaths) {
 				
-				Long setId = null;
-				
-				try(PreparedStatement stmt = cnn.prepareStatement("insert into Sets(name, abbreviation, language) values (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-					stmt.setString(1, Strings.emptyToNull(setNode.path("name").asText()));
-					stmt.setString(2, Strings.emptyToNull(setNode.path("abbreviation").asText()));
-					stmt.setString(3, Strings.emptyToNull(setNode.path("language").asText()));
+				try(InputStream inputStream = openInputStreamFromPath(setPath)) {
+					ObjectMapper mapper = new ObjectMapper();
+					JsonNode setNode = mapper.readTree(inputStream);
 					
-					stmt.executeUpdate();
-					ResultSet rst = stmt.getGeneratedKeys();
-					if(rst.next()) {
-						setId = rst.getLong(1);
+					Long setId = null;
+					
+					try(PreparedStatement stmt = cnn.prepareStatement("insert into Sets(name, abbreviation, language) values (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+						stmt.setString(1, Strings.emptyToNull(setNode.path("name").asText()));
+						stmt.setString(2, Strings.emptyToNull(setNode.path("abbreviation").asText()));
+						stmt.setString(3, Strings.emptyToNull(setNode.path("language").asText()));
+						
+						stmt.executeUpdate();
+						ResultSet rst = stmt.getGeneratedKeys();
+						if(rst.next()) {
+							setId = rst.getLong(1);
+						}
 					}
-				}
-				
-				ArrayNode cardsNode = (ArrayNode)setNode.path("cards");
-				
-				try(PreparedStatement stmt = cnn.prepareStatement("insert into Cards(name, powerToughness, castingCost, typeLine, text, picUrl, cardSet, setIndex) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-					for(JsonNode cardNode : cardsNode) {
-						try {
-							stmt.clearParameters();
-							stmt.setString(1, Strings.emptyToNull(cardNode.path("name").asText()));
-							stmt.setString(2, Strings.emptyToNull(cardNode.path("powerToughness").asText()));
-							stmt.setString(3, Strings.emptyToNull(cardNode.path("castingCost").asText()));
-							stmt.setString(4, Strings.emptyToNull(cardNode.path("typeLine").asText()));
-							stmt.setNull(5, Types.VARCHAR); //text
-							stmt.setNull(6, Types.VARCHAR); //picUrl
-							stmt.setLong(7, setId);
-							stmt.setString(8, Strings.emptyToNull(cardNode.path("index").asText()));
-							stmt.executeUpdate();
-						} catch(java.sql.SQLDataException exc) {
-							System.err.println("Error while saving card: " + cardNode.toString());
-							throw exc;
+					
+					ArrayNode cardsNode = (ArrayNode)setNode.path("cards");
+					
+					try(PreparedStatement stmt = cnn.prepareStatement("insert into Cards(name, powerToughness, castingCost, typeLine, text, picUrl, cardSet, setIndex) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+						for(JsonNode cardNode : cardsNode) {
+							try {
+								stmt.clearParameters();
+								stmt.setString(1, Strings.emptyToNull(cardNode.path("name").asText()));
+								stmt.setString(2, Strings.emptyToNull(cardNode.path("powerToughness").asText()));
+								stmt.setString(3, Strings.emptyToNull(cardNode.path("castingCost").asText()));
+								stmt.setString(4, Strings.emptyToNull(cardNode.path("typeLine").asText()));
+								stmt.setNull(5, Types.VARCHAR); //text
+								stmt.setNull(6, Types.VARCHAR); //picUrl
+								stmt.setLong(7, setId);
+								stmt.setString(8, Strings.emptyToNull(cardNode.path("index").asText()));
+								stmt.executeUpdate();
+							} catch(java.sql.SQLDataException exc) {
+								System.err.println("Error while saving card: " + cardNode.toString());
+								throw exc;
+							}
 						}
 					}
 				}
@@ -123,10 +125,10 @@ public class DatabaseService {
 	}
 	
 	private static InputStream openInputStreamFromPath(String path) throws IOException {
-		if(path.startsWith("jar:")) {
-			return DatabaseService.class.getResourceAsStream(path.substring("jar:".length()));
-		} else if(path.startsWith("file:")) {
-			return new FileInputStream(new File(path.substring("file:".length())));
+		if(path.startsWith(PATH_PREFIX_JAR)) {
+			return DatabaseService.class.getResourceAsStream(path.substring(PATH_PREFIX_JAR.length()));
+		} else if(path.startsWith(FILE_PREFIX_JAR)) {
+			return new FileInputStream(new File(path.substring(FILE_PREFIX_JAR.length())));
 		} else {
 			return new FileInputStream(new File(path));
 		}
