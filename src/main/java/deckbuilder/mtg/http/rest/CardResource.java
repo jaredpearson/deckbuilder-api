@@ -35,16 +35,6 @@ public class CardResource extends Resource {
 		return resource;
 	}
 	
-	/**
-	 * Puts the key value only if the value is not null.
-	 */
-	private void putIfValue(String key, Object value) {
-		if(value == null) {
-			return;
-		}
-		this.put(key, value);
-	}
-	
 	public static List<CardResource> create(List<Card> cards) {
 		ArrayList<CardResource> resources = new ArrayList<>(cards.size());
 		for(Card card : cards) {
@@ -74,4 +64,15 @@ public class CardResource extends Resource {
 		}
 		return resources;
 	}
+	
+	/**
+	 * Puts the key value only if the value is not null.
+	 */
+	private void putIfValue(String key, Object value) {
+		if(value == null) {
+			return;
+		}
+		this.put(key, value);
+	}
+	
 }

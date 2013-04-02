@@ -35,7 +35,7 @@ public class CardController {
 	@Path("/{id}")
 	public CardResource getCardById(@PathParam("id") long id) throws Exception {
 		Card card = cardService.getCardById(id);
-		return CardResource.create(card);
+		return CardResource.createWithLinkedReferences(card);
 	}
 	
 	@POST
