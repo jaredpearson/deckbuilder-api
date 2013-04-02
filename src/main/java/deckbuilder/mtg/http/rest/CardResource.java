@@ -15,6 +15,13 @@ public class CardResource extends Resource {
 	private void setSimpleProperties(Card card) {
 		this.put("id", card.getId());
 		this.put("name", card.getName());
+		this.putIfValue("castingCost", card.getCastingCost());
+		this.putIfValue("powerToughness", card.getPowerToughness());
+		this.putIfValue("typeLine", card.getTypeLine());
+		this.putIfValue("rarity", card.getRarity());
+		this.putIfValue("text", card.getText());
+		this.putIfValue("setIndex", card.getSetIndex());
+		this.putIfValue("author", card.getPowerToughness());
 	}
 	
 	public static CardResource create(Card card) {
@@ -26,6 +33,16 @@ public class CardResource extends Resource {
 		}
 		
 		return resource;
+	}
+	
+	/**
+	 * Puts the key value only if the value is not null.
+	 */
+	private void putIfValue(String key, Object value) {
+		if(value == null) {
+			return;
+		}
+		this.put(key, value);
 	}
 	
 	public static List<CardResource> create(List<Card> cards) {

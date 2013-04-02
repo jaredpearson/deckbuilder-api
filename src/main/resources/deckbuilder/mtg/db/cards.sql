@@ -7,5 +7,7 @@ CREATE TABLE Cards (
 	typeLine VARCHAR(65),
 	picUrl VARCHAR(100),
 	cardSet INTEGER NOT NULL REFERENCES Sets(id),
-	setIndex VARCHAR(4)
+	setIndex VARCHAR(4),
+	rarity CHAR(1),
+	artist VARCHAR(50)
 )

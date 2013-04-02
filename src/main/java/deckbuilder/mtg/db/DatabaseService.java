@@ -87,9 +87,9 @@ public class DatabaseService {
 					Long setId = null;
 					
 					try(PreparedStatement stmt = cnn.prepareStatement("insert into Sets(name, abbreviation, language) values (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-						stmt.setString(1, Strings.emptyToNull(setNode.path("name").asText()));
-						stmt.setString(2, Strings.emptyToNull(setNode.path("abbreviation").asText()));
-						stmt.setString(3, Strings.emptyToNull(setNode.path("language").asText()));
+						stmt.setString(1, asString(setNode, "name"));
+						stmt.setString(2, asString(setNode, "abbreviation"));
+						stmt.setString(3, asString(setNode, "language"));
 						
 						stmt.executeUpdate();
 						ResultSet rst = stmt.getGeneratedKeys();
@@ -100,18 +100,20 @@ public class DatabaseService {
 					
 					ArrayNode cardsNode = (ArrayNode)setNode.path("cards");
 					
-					try(PreparedStatement stmt = cnn.prepareStatement("insert into Cards(name, powerToughness, castingCost, typeLine, text, picUrl, cardSet, setIndex) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+					try(PreparedStatement stmt = cnn.prepareStatement("insert into Cards(name, powerToughness, castingCost, typeLine, text, picUrl, cardSet, setIndex, rarity, artist) values (?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
 						for(JsonNode cardNode : cardsNode) {
 							try {
 								stmt.clearParameters();
-								stmt.setString(1, Strings.emptyToNull(cardNode.path("name").asText()));
-								stmt.setString(2, Strings.emptyToNull(cardNode.path("powerToughness").asText()));
-								stmt.setString(3, Strings.emptyToNull(cardNode.path("castingCost").asText()));
-								stmt.setString(4, Strings.emptyToNull(cardNode.path("typeLine").asText()));
-								stmt.setNull(5, Types.VARCHAR); //text
+								stmt.setString(1, asString(cardNode, "name"));
+								stmt.setString(2, asString(cardNode, "powerToughness"));
+								stmt.setString(3, asString(cardNode, "castingCost"));
+								stmt.setString(4, asString(cardNode, "typeLine"));
+								stmt.setString(5, asString(cardNode, "body"));
 								stmt.setNull(6, Types.VARCHAR); //picUrl
 								stmt.setLong(7, setId);
-								stmt.setString(8, Strings.emptyToNull(cardNode.path("index").asText()));
+								stmt.setString(8, asString(cardNode, "index"));
+								stmt.setString(9, rarityToAbbr(asString(cardNode, "rarity")));
+								stmt.setString(10, asString(cardNode, "artist"));
 								stmt.executeUpdate();
 							} catch(java.sql.SQLDataException exc) {
 								System.err.println("Error while saving card: " + cardNode.toString());
@@ -122,6 +124,23 @@ public class DatabaseService {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets a string from the field on the JSON node.
+	 */
+	private static String asString(JsonNode node, String field) {
+		return Strings.emptyToNull(node.path(field).asText());
+	}
+	
+	/**
+	 * Converts the full rarity name to the abbreviation
+	 */
+	private static String rarityToAbbr(String value) {
+		if(value == null || value.trim().length() == 0) {
+			return null;
+		}
+		return value.substring(0, 1).toUpperCase();
 	}
 	
 	private static InputStream openInputStreamFromPath(String path) throws IOException {

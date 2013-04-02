@@ -18,13 +18,18 @@ public class Card {
 	@GenericGenerator(name="increment", strategy="increment")
 	private Long id;
 	
+	private String setIndex;
 	private String name;
+	private String powerToughness;
+	private String castingCost;
+	private String text;
+	private String typeLine;
+	private String rarity;
+	private String artist;
 	
 	@ManyToOne
 	@JoinColumn(name="cardSet")
 	private CardSet set;
-	
-	private String setIndex;
 	
 	public Card() {
 	}
@@ -64,5 +69,53 @@ public class Card {
 	
 	public void setSetIndex(String setIndex) {
 		this.setIndex = setIndex;
+	}
+
+	public String getPowerToughness() {
+		return powerToughness;
+	}
+
+	public void setPowerToughness(String powerToughness) {
+		this.powerToughness = powerToughness;
+	}
+
+	public String getCastingCost() {
+		return castingCost;
+	}
+
+	public void setCastingCost(String castingCost) {
+		this.castingCost = castingCost;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getTypeLine() {
+		return typeLine;
+	}
+
+	public void setTypeLine(String typeLine) {
+		this.typeLine = typeLine;
+	}
+
+	public String getRarity() {
+		return rarity;
+	}
+
+	public void setRarity(String rarity) {
+		this.rarity = rarity;
+	}
+
+	public String getAuthor() {
+		return artist;
+	}
+
+	public void setAuthor(String author) {
+		this.artist = author;
 	}
 }
