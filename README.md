@@ -6,7 +6,7 @@ Due to trademark and copyright concerns, no card information is supplied.
 
 ## Legal
 
-This application is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC. This application may use the trademarks and other intellectual property of Wizards of the Coast LLC, which is permitted under Wizards' Fan Site Policy (http://company.wizards.com/fankit). For example, MAGIC: THE GATHERING® is a trademark[s] of Wizards of the Coast. For more information about Wizards of the Coast or any of Wizards' trademarks or other intellectual property, please visit their website at (www.wizards.com).
+This application is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC. This application may use the trademarks and other intellectual property of Wizards of the Coast LLC, which is permitted under Wizards' Fan Site Policy (http://company.wizards.com/fankit). For example, MAGIC: THE GATHERING�� is a trademark[s] of Wizards of the Coast. For more information about Wizards of the Coast or any of Wizards' trademarks or other intellectual property, please visit their website at (www.wizards.com).
 
 ## Server Setup
 
@@ -52,8 +52,8 @@ Where `~/testset.json` contains the following:
 	"abbreviation": "OBL",
 	"name": "Oblivion",
 	"cards": [
-		{"index": "1", "name": "Guantlet of Darkness", "typeLine": "Equipment", "powerToughness": null, "castingCost": "1"},
-		{"index": "2", "name": "Human", "typeLine": "Creature", "powerToughness": "1/1", "castingCost": "W"}
+		{"index": "1", "name": "Guantlet of Darkness", "typeLine": "Equipment", "powerToughness": null, "castingCost": "1", "body": null, "rarity": null, "artist": null},
+		{"index": "2", "name": "Human", "typeLine": "Creature", "powerToughness": "1/1", "castingCost": "W", "body": null, "rarity": null, "artist": null}
 	]
 }
 ```
