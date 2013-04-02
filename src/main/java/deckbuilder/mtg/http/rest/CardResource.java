@@ -13,6 +13,7 @@ public class CardResource extends Resource {
 	}
 	
 	private void setSimpleProperties(Card card) {
+		this.putEntityUrl(Card.class, card.getId());
 		this.put("id", card.getId());
 		this.put("name", card.getName());
 		this.putIfValue("castingCost", card.getCastingCost());

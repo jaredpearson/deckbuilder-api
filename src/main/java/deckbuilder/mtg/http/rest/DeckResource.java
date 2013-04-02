@@ -12,6 +12,7 @@ public class DeckResource extends Resource {
 	}
 	
 	private void setSimpleProperties(Deck deck) {
+		this.putEntityUrl(Deck.class, deck.getId());
 		this.put("id", deck.getId());
 		this.put("name", deck.getName());
 	}

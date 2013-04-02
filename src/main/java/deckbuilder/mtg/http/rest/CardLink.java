@@ -7,9 +7,10 @@ import deckbuilder.mtg.entities.Card;
 
 public class CardLink extends Link {
 	private static final long serialVersionUID = 1L;
-
+	
 	public CardLink(Card card) {
-		put("id", card.getId());
+		this.putEntityUrl(Card.class, card.getId());
+		this.put("id", card.getId());
 	}
 	
 	public static List<CardLink> create(List<Card> cards) {

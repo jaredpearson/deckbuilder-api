@@ -12,6 +12,7 @@ public class CardSetResource extends Resource {
 	}
 	
 	private void setSimpleProperties(CardSet cardSet) {
+		this.putEntityUrl(CardSet.class, cardSet.getId());
 		this.put("name", cardSet.getName());
 		this.put("abbreviation", cardSet.getAbbreviation());
 		this.put("language", cardSet.getLanguage());

@@ -6,6 +6,7 @@ public class UserLink extends Link {
 	private static final long serialVersionUID = 1L;
 
 	public UserLink(User user) {
+		this.putEntityUrl(User.class, user.getId());
 		this.put("id", user.getId());
 	}
 }
