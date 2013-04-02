@@ -25,7 +25,7 @@ The server is setup to use HSQLDB, which passes connection information through t
 To create a database in your home directory set the following environment variable
 
 ```sh
-export DATABASE_URL=hsqldb:file:~/.deckbuilderapi/db/dbmain;create=true
+export DATABASE_URL=hsqldb:file:~/.deckbuilderapi/db/dbmain;create=true;shutdown=true
 ```
 
 After the environment variable is set, the database DDL can be creating using the following
