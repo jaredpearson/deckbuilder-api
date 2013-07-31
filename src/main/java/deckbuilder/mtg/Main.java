@@ -18,6 +18,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import deckbuilder.mtg.db.DatabaseCredentials;
@@ -68,7 +69,8 @@ public class Main {
 		String[] commandArgs = (args.length == 1) ? new String[0] : Arrays.copyOfRange(args, 1, args.length);
 		
 		if(COMMAND_RUN.equals(command)) {
-			(new HttpServer()).startServer(createAppInjector());
+			HttpServer httpServer = createAppInjector().getInstance(HttpServer.class);
+			httpServer.startServer();
 			
 		} else if(COMMAND_DBINIT.equals(command)) {
 			DatabaseService dbService = createAppInjector().getInstance(DatabaseService.class);
@@ -145,6 +147,8 @@ public class Main {
 		persistModule.properties(properties);
 		
 		return Guice.createInjector(persistModule, 
+				
+			//Database/Datasource module
 			new AbstractModule() {
 				@Override
 				protected void configure() {
@@ -152,7 +156,10 @@ public class Main {
 					bind(DataSource.class).toProvider(HsqldbDataSourceProvider.class).in(Singleton.class);
 					bind(DatabaseService.class).in(Singleton.class);
 				}
-			}, new AbstractModule() {
+			}, 
+			
+			//Application specific services module
+			new AbstractModule() {
 				@Override
 				protected void configure() {
 					bind(UserService.class).to(DefaultUserService.class).in(Singleton.class);
@@ -182,6 +189,31 @@ public class Main {
 					}
 					
 					return configuration;
+				}
+			},
+			
+			//HTTP Server module
+			new AbstractModule() {
+				@Override
+				protected void configure() {
+					bind(HttpServer.class).in(Singleton.class);
+				}
+				
+				@Provides 
+				@Singleton
+				@Named("HTTP Port")
+				public int getHttpPort() {
+					
+					//default to port 8080
+					int port = 8080;
+					
+					//attempt to get the port from the environment variable
+					String portString = System.getenv("PORT");
+					if(portString != null) {
+						port = Integer.valueOf(portString);
+					}
+					
+					return port;
 				}
 			});
 	}

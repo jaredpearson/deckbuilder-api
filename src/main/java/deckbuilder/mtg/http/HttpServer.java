@@ -3,12 +3,15 @@ package deckbuilder.mtg.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -23,8 +26,25 @@ import deckbuilder.mtg.http.rest.DeckCardController;
 import deckbuilder.mtg.http.rest.DeckController;
 
 public class HttpServer {
-	public void startServer(Injector appInjector) throws Exception {
-		Server server = new Server(8080);
+	private Injector appInjector;
+	private int port = 8080;
+	
+	@Inject
+	public HttpServer(Injector appInjector) {
+		this.appInjector = appInjector;
+	}
+	
+	@Inject 
+	public void setPort(@Named("HTTP Port") int port) {
+		this.port = port;
+	}
+	
+	public int getPort() {
+		return this.port;
+	}
+	
+	public void startServer() throws Exception {
+		Server server = new Server(getPort());
 		
 		ServletContextHandler servletContextHandler = new ServletContextHandler();
 		
@@ -50,6 +70,9 @@ public class HttpServer {
 		
 		@Override
 		protected Injector getInjector() {
+			
+			//creates a new application injector for servlets with the application
+			//injector as the parent
 			return appInjector.createChildInjector(new JerseyServletModule(){
 				@Override
 				protected void configureServlets() {
