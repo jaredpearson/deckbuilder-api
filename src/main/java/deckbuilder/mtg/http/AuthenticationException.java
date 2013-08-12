@@ -1,5 +1,10 @@
 package deckbuilder.mtg.http;
 
+/**
+ * Thrown by {@link AuthenticationProvider} when an exception occurs during 
+ * authentication. 
+ * @author jared.pearson
+ */
 public class AuthenticationException extends Exception {
 	private static final long serialVersionUID = 1L;
 

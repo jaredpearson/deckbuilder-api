@@ -20,7 +20,7 @@ public class FacebookAuthServlet extends HttpServlet{
 	private static final long serialVersionUID = -4564799401018750115L;
 
 	@Inject
-	Provider<FacebookService> facebookService;
+	private Provider<FacebookService> facebookService;
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

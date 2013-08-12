@@ -9,7 +9,7 @@ import javax.ws.rs.ext.Provider;
  * Map an authentication exception to an HTTP 401 response
  */
 @Provider
-public class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
+class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
     public Response toResponse(AuthenticationException e) {
         return Response.
                 status(Status.UNAUTHORIZED).

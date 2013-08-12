@@ -7,8 +7,6 @@ import com.sun.jersey.spi.container.ContainerRequestFilter;
 
 import deckbuilder.mtg.entities.User;
 
-import java.util.logging.Logger;
-
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
@@ -18,13 +16,12 @@ import javax.ws.rs.core.UriInfo;
  * Security filter
  */
 public class SecurityFilter implements ContainerRequestFilter {
-	static final Logger logger = Logger.getLogger(SecurityFilter.class.getName()); 
 	
 	@Context
     private UriInfo uriInfo;
 	
 	@Inject
-	FacebookAuthenticationProvider facebookAuthenticationProvider;
+	private FacebookAuthenticationProvider facebookAuthenticationProvider;
 	
 	@Transactional
     public ContainerRequest filter(ContainerRequest request) {
