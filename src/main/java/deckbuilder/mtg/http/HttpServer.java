@@ -9,7 +9,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
+import com.google.common.base.Strings;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.persist.PersistFilter;
@@ -79,10 +81,12 @@ public class HttpServer {
 					//exception mappers
 					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
 					
+					//facebook
+					bind(FacebookService.class).in(Singleton.class);
+					
 					//security
 					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
 					bind(SecurityFilter.class).in(Singleton.class);
-					bind(FacebookService.class).in(Singleton.class);
 					bind(FacebookAuthenticationProvider.class).in(Singleton.class);
 					
 					//setup the basic servlet for getting access tokens from facebook 
@@ -103,6 +107,32 @@ public class HttpServer {
 					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
 					bind(GuiceContainer.class);
 					serve("/*").with(GuiceContainer.class, params);
+				}
+				
+				@Provides
+				@Singleton 
+				@Named("FacebookAppId")
+				public String getFacebookAppId() {
+					final String apiKey = System.getenv("FACEBOOK_APP_ID");
+					
+					if(Strings.isNullOrEmpty(apiKey)) {
+						throw new RuntimeException("FACEBOOK_APP_ID must be provided as a environment variable");
+					}
+					
+					return apiKey;
+				}
+				
+				@Provides
+				@Singleton
+				@Named("FacebookSecret")
+				public String getFacebookSecret() {
+					final String secret = System.getenv("FACEBOOK_SECRET");
+
+					if(Strings.isNullOrEmpty(secret)) {
+						throw new RuntimeException("FACEBOOK_SECRET must be provided as a environment variable");
+					}
+					
+					return secret;
 				}
 			});
 		}

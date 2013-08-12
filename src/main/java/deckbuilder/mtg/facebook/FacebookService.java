@@ -13,25 +13,23 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 @Singleton
 public class FacebookService {
-	private static String API_KEY;
-	private static String SECRET;
+	private final String apiKey;
+	private final String secret;
 	
-	static {
-		//load the appId and secret from System variables
-		API_KEY = System.getenv("FACEBOOK_APP_ID");
-		SECRET = System.getenv("FACEBOOK_SECRET");
-		
-		if(Strings.isNullOrEmpty(API_KEY)) {
-			throw new RuntimeException("FACEBOOK_APP_ID must be provided as a environment variable");
-		}
-		if(Strings.isNullOrEmpty(SECRET)) {
-			throw new RuntimeException("FACEBOOK_SECRET must be provided as a environment variable");
-		}
+	/**
+	 * Creates a new FacebookService with the specified API key and secret. These are provided
+	 * by Facebook when creating a new application and used when authenticating clients.
+	 */
+	@Inject
+	public FacebookService(@Named("FacebookAppId") String apiKey, @Named("FacebookSecret") String secret) {
+		this.apiKey = apiKey;
+		this.secret = secret;
 	}
 	
 	/**
@@ -40,7 +38,7 @@ public class FacebookService {
 	public String getRequestCodeUrl(String returnUrl) {
 		try {
 			return "https://www.facebook.com/dialog/oauth?" + 
-			    "client_id=" + API_KEY + 
+			    "client_id=" + apiKey + 
 			    "&redirect_uri=" + URLEncoder.encode(returnUrl, "UTF-8");
 		} catch (UnsupportedEncodingException exc) {
 			throw new RuntimeException(exc);
@@ -70,9 +68,9 @@ public class FacebookService {
 	public String getAccessToken(String code, String returnUrl) {
 		try {
 			String url = "https://graph.facebook.com/oauth/access_token?" + 
-					"client_id=" + API_KEY + 
+					"client_id=" + apiKey + 
 					"&redirect_uri=" + URLEncoder.encode(returnUrl, "UTF-8") + 
-					"&client_secret=" + SECRET + 
+					"&client_secret=" + secret + 
 					"&code=" + code;
 			return (String) request(url, new ConnectionHandler() {
 				@Override
