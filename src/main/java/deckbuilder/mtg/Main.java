@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -21,6 +23,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
+import deckbuilder.mtg.Configuration.CorsConfiguration;
 import deckbuilder.mtg.db.DatabaseCredentials;
 import deckbuilder.mtg.db.DatabaseService;
 import deckbuilder.mtg.db.DatabaseUrlParser;
@@ -180,15 +183,21 @@ public class Main {
 						throw new RuntimeException(exc);
 					}
 					
-					Configuration configuration = new Configuration();
-					
+
 					//get the administrators
-					String adminNamesAsString = properties.getProperty("administrators");
+					final List<String> administratorNames;
+					final String adminNamesAsString = properties.getProperty("administrators");
 					if(adminNamesAsString != null) {
-						configuration.setAdministratorNames(Arrays.asList(adminNamesAsString.split(",")));
+						administratorNames = Arrays.asList(adminNamesAsString.split(","));
+					} else {
+						administratorNames = Collections.emptyList();
 					}
 					
-					return configuration;
+					// get the cors.* properties
+					final String corsAllowedOrigins = properties.getProperty("cors.allowedOrigins", ""); 
+					CorsConfiguration corsConfig = new CorsConfiguration(corsAllowedOrigins);
+					
+					return new Configuration(administratorNames, corsConfig);
 				}
 			},
 			

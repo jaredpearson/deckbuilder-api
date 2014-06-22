@@ -59,11 +59,11 @@ public class DefaultUserService implements UserService {
 		if(user == null) {
 			return false;
 		}
-		if(configuration == null || configuration.getAdministratorNames() == null) {
+		if(configuration == null || configuration.administratorNames == null) {
 			return false;
 		}
 		
-		for(String adminName : configuration.getAdministratorNames()) {
+		for(String adminName : configuration.administratorNames) {
 			if(adminName != null && adminName.equalsIgnoreCase(user.getFacebookUsername())) {
 				return true;
 			}

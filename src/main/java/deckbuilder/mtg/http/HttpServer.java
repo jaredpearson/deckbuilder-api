@@ -3,13 +3,16 @@ package deckbuilder.mtg.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -22,6 +25,7 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
+import deckbuilder.mtg.Configuration;
 import deckbuilder.mtg.facebook.FacebookService;
 import deckbuilder.mtg.http.rest.CardIdResource;
 import deckbuilder.mtg.http.rest.CardResource;
@@ -74,9 +78,10 @@ public class HttpServer {
 	
 	
 	private static class DeckBuilderGuiceServletConfig extends GuiceServletContextListener {
-		private Injector appInjector;
+		private final Injector appInjector;
 		
-		public DeckBuilderGuiceServletConfig(Injector appInjector) {
+		public DeckBuilderGuiceServletConfig(@Nonnull Injector appInjector) {
+			assert appInjector != null;
 			this.appInjector = appInjector;
 		}
 		
@@ -99,12 +104,29 @@ public class HttpServer {
 					//setup persistence for all resources
 					filter("/*").through(PersistFilter.class);
 					
+					//setup the cross-origin filter
+					final Map<String, String> crossOriginFilterInitParams = createCrossOriginFilterInitParams();
+					bind(CrossOriginFilter.class).in(Singleton.class);
+					filter("/*").through(CrossOriginFilter.class, crossOriginFilterInitParams);
+					
 					//setup to serve all resources from the guice container
 					Map<String, String> params = new HashMap<String, String>();
 					params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
 					bind(GuiceContainer.class);
 					serve("/*").with(GuiceContainer.class, params);
+				}
+				
+				/**
+				 * Creates the initialization parameters for the CrossOriginFilter
+				 */
+				private Map<String, String> createCrossOriginFilterInitParams() {
+					final Configuration config = appInjector.getInstance(Configuration.class);
+					final Map<String, String> crossOriginFilterInitParams = Maps.newHashMap();
+					crossOriginFilterInitParams.put("allowedOrigins", config.getCors().allowedOrigins);
+					crossOriginFilterInitParams.put("allowedMethods", "GET,POST,HEAD,PATCH,DELETE,OPTIONS");
+					crossOriginFilterInitParams.put("allowedHeaders", "Authorization,authorization");
+					return crossOriginFilterInitParams;
 				}
 			},new JerseyServletModule(){
 				@Override

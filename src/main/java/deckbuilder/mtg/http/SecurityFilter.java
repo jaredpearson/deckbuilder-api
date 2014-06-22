@@ -30,6 +30,11 @@ public class SecurityFilter implements ContainerRequestFilter {
     		return request;
     	}
     	
+    	//allow the OPTIONS to bypass the filter
+    	if(request.getMethod().equals("OPTIONS")) {
+    		return request;
+    	}
+    	
     	try {
 	    	User user = authenticate(request);
 	        request.setSecurityContext(new Authorizer(user));
