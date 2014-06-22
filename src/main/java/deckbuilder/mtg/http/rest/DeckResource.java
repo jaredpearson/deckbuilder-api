@@ -94,42 +94,44 @@ public class DeckResource {
 			deck.setOwner(principal.getUser());
 		}
 		
-		// first pass over the cards associated to the deck
-		final List<Long> cardIds = Lists.newArrayListWithExpectedSize(deckData.getCards().size());
-		for (DeckCardCreateModel deckCardData : deckData.getCards()) {
-			
-			// make sure the quantity is specified
-			if (deckCardData.getQuantity() == null) {
-				deckCardData.setQuantity(1);
+		if (deckData.getCards() != null && !deckData.getCards().isEmpty()) {
+			// first pass over the cards associated to the deck
+			final List<Long> cardIds = Lists.newArrayListWithExpectedSize(deckData.getCards().size());
+			for (DeckCardCreateModel deckCardData : deckData.getCards()) {
+				
+				// make sure the quantity is specified
+				if (deckCardData.getQuantity() == null) {
+					deckCardData.setQuantity(1);
+				}
+				
+				if (deckCardData.getCardId() == null) {
+					return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Card specified without card ID"})).build();
+				}
+				cardIds.add(deckCardData.getCardId());
 			}
 			
-			if (deckCardData.getCardId() == null) {
-				return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Card specified without card ID"})).build();
-			}
-			cardIds.add(deckCardData.getCardId());
-		}
-		
-		// retrieve the cards that were specified in the input
-		final List<Card> cards = cardService.getCardsById(cardIds);
-		final Map<Long, Card> cardIdToCard = Maps.newHashMapWithExpectedSize(cards.size());
-		for (Card card : cards) {
-			cardIdToCard.put(card.getId(), card);
-		}
-		
-		// second pass to check that all cards were loaded
-		final List<DeckCard> deckCards = Lists.newArrayListWithExpectedSize(cards.size());
-		for (DeckCardCreateModel deckCardData : deckData.getCards()) {
-			final Card card = cardIdToCard.get(deckCardData.getCardId());
-			if (card == null) {
-				return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Unknown card ID specified: " + deckCardData.getCardId()})).build();
+			// retrieve the cards that were specified in the input
+			final List<Card> cards = cardService.getCardsById(cardIds);
+			final Map<Long, Card> cardIdToCard = Maps.newHashMapWithExpectedSize(cards.size());
+			for (Card card : cards) {
+				cardIdToCard.put(card.getId(), card);
 			}
 			
-			final DeckCard deckCard = new DeckCard();
-			deckCard.setCard(card);
-			deckCard.setDeck(deck);
-			deckCards.add(deckCard);
+			// second pass to check that all cards were loaded
+			final List<DeckCard> deckCards = Lists.newArrayListWithExpectedSize(cards.size());
+			for (DeckCardCreateModel deckCardData : deckData.getCards()) {
+				final Card card = cardIdToCard.get(deckCardData.getCardId());
+				if (card == null) {
+					return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Unknown card ID specified: " + deckCardData.getCardId()})).build();
+				}
+				
+				final DeckCard deckCard = new DeckCard();
+				deckCard.setCard(card);
+				deckCard.setDeck(deck);
+				deckCards.add(deckCard);
+			}
+			deck.setCards(deckCards);
 		}
-		deck.setCards(deckCards);
 		
 		// save the deck
 		final Deck savedDeck = deckService.createDeck(deck);

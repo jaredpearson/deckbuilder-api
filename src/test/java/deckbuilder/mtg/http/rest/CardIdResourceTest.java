@@ -1,7 +1,6 @@
 package deckbuilder.mtg.http.rest;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -10,6 +9,7 @@ import org.junit.Test;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.CardModel;
 import deckbuilder.mtg.service.CardService;
 
@@ -28,12 +28,20 @@ public class CardIdResourceTest {
 		card.setSet(cardSet);
 		
 		UriInfo uriInfo = mock(UriInfo.class);
-		
+		BuildContext buildContext = mock(BuildContext.class);
+		BuildContextFactory buildContextFactory = mock(BuildContextFactory.class);
+		when(buildContextFactory.create(uriInfo)).thenReturn(buildContext);
 		CardService cardService = mock(CardService.class);
 		when(cardService.getCardById(card.getId())).thenReturn(card);
+		UrlBuilder urlBuilder = mock(UrlBuilder.class);
+		when(urlBuilder.build(buildContext)).thenReturn("http://test.com");
+		EntityUrlFactory urlFactory = mock(EntityUrlFactory.class);
+		when(urlFactory.createEntityUrl(any(Class.class), any())).thenReturn(urlBuilder);
 		
 		CardIdResource resource = new CardIdResource();
 		resource.cardService = cardService;
+		resource.buildContextFactory = buildContextFactory;
+		resource.urlFactory = urlFactory;
 		
 		CardModel actualCard = resource.getCardById(uriInfo, card.getId());
 		

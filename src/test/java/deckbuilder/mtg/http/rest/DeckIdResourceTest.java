@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.net.URI;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -16,6 +18,7 @@ import org.junit.Test;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.service.DeckService;
 
@@ -33,9 +36,20 @@ public class DeckIdResourceTest {
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
 
 		UriInfo uriInfo = mock(UriInfo.class);
+		URI requestUri = new URI("http://test.com");
+		BuildContext buildContext = mock(BuildContext.class);
+		when(buildContext.getRequestUri()).thenReturn(requestUri);
+		BuildContextFactory buildContextFactory = mock(BuildContextFactory.class);
+		when(buildContextFactory.create(uriInfo)).thenReturn(buildContext);
+		UrlBuilder urlBuilder = mock(UrlBuilder.class);
+		when(urlBuilder.build(buildContext)).thenReturn("http://test.com");
+		EntityUrlFactory urlFactory = mock(EntityUrlFactory.class);
+		when(urlFactory.createEntityUrl(any(Class.class), any())).thenReturn(urlBuilder);
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
+		resource.buildContextFactory = buildContextFactory;
+		resource.urlFactory = urlFactory;
 		DeckModel actualDeck = resource.getDeckById(uriInfo, deck.getId());
 		
 		Assert.assertNotNull("Expected getDeckById to return the deck", deck);

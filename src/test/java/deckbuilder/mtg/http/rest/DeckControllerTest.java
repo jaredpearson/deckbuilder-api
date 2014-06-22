@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static deckbuilder.mtg.http.rest.SecurityTestUtils.*;
 import static deckbuilder.mtg.http.rest.UserTestUtils.*;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.DeckResource.DeckCreateModel;
 import deckbuilder.mtg.http.rest.DeckResource.DeckSaveResponse;
 import deckbuilder.mtg.http.rest.models.DeckModel;
@@ -37,12 +39,23 @@ public class DeckControllerTest {
 		when(deckService.getDecksForOwner(user.getId())).thenReturn(Arrays.asList(deck));
 
 		UriInfo uriInfo = mock(UriInfo.class);
+		URI requestUri = new URI("http://test.com");
+		BuildContext buildContext = mock(BuildContext.class);
+		when(buildContext.getRequestUri()).thenReturn(requestUri);
+		BuildContextFactory buildContextFactory = mock(BuildContextFactory.class);
+		when(buildContextFactory.create(uriInfo)).thenReturn(buildContext);
+		UrlBuilder urlBuilder = mock(UrlBuilder.class);
+		when(urlBuilder.build(buildContext)).thenReturn("http://test.com");
+		EntityUrlFactory urlFactory = mock(EntityUrlFactory.class);
+		when(urlFactory.createEntityUrl(any(Class.class), any())).thenReturn(urlBuilder);
 		
 		SecurityContext securityContext = mockSecurityContext(user);
 		
-		DeckResource controller = new DeckResource();
-		controller.deckService = deckService;
-		List<DeckModel> decks = controller.list(securityContext, uriInfo);
+		DeckResource resource = new DeckResource();
+		resource.deckService = deckService;
+		resource.buildContextFactory = buildContextFactory;
+		resource.urlFactory = urlFactory;
+		List<DeckModel> decks = resource.list(securityContext, uriInfo);
 		
 		Assert.assertEquals("Expected list to return all available decks", 1, decks.size());
 		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), decks.get(0).getId());

@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static deckbuilder.mtg.http.rest.SecurityTestUtils.*;
 import static deckbuilder.mtg.http.rest.UserTestUtils.*;
 
+import java.net.URI;
 import java.util.Arrays;
 
 import javax.ws.rs.core.Response;
@@ -17,6 +18,7 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.CardSetResource.CardSetCreateContext;
 import deckbuilder.mtg.http.rest.CardSetResource.CardSetSaveResponse;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
@@ -39,12 +41,23 @@ public class CardSetControllerTest {
 		cardSet2.setLanguage("en");
 		
 		UriInfo uriInfo = mock(UriInfo.class);
+		URI uri = new URI("http://test.com");
+		BuildContext context = mock(BuildContext.class);
+		when(context.getRequestUri()).thenReturn(uri);
+		BuildContextFactory contextFactory = mock(BuildContextFactory.class);
+		when(contextFactory.create(uriInfo)).thenReturn(context);
+		UrlBuilder urlBuilder = mock(UrlBuilder.class);
+		when(urlBuilder.build(context)).thenReturn("http://test.com");
+		EntityUrlFactory urlFactory = mock(EntityUrlFactory.class);
+		when(urlFactory.createEntityUrl(any(Class.class), any())).thenReturn(urlBuilder);
 		
 		CardSetService cardSetService = mock(CardSetService.class);
 		when(cardSetService.getCardSets()).thenReturn(Arrays.asList(cardSet1, cardSet2));
 		
 		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;
+		controller.buildContextFactory = contextFactory;
+		controller.urlFactory = urlFactory;
 		CardSetListModel resources = controller.list(uriInfo);
 		
 		Assert.assertNotNull("Expected the resources returned by list to not be null", resources);
