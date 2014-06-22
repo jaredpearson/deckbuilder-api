@@ -15,7 +15,7 @@ import deckbuilder.mtg.service.UserService;
  * @author jared.pearson
  */
 @Path("/{version}/user")
-public class UserController {
+public class UserResource {
 	
 	@Inject
 	EntityUrlFactory urlFactory;

@@ -16,7 +16,7 @@ import deckbuilder.mtg.service.DeckCardService;
 import deckbuilder.mtg.service.DeckService;
 
 @Path("/{version}/deckCard")
-public class DeckCardController {
+public class DeckCardResource {
 	
 	@Inject
 	CardService cardService;

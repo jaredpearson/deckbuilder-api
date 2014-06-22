@@ -15,8 +15,8 @@ import org.mockito.stubbing.Answer;
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.CardController.CardCreateContext;
-import deckbuilder.mtg.http.rest.CardController.CardSaveContext;
+import deckbuilder.mtg.http.rest.CardResource.CardCreateContext;
+import deckbuilder.mtg.http.rest.CardResource.CardSaveContext;
 import deckbuilder.mtg.http.rest.models.CardModel;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
@@ -38,7 +38,7 @@ public class CardControllerTest {
 		CardService cardService = mock(CardService.class);
 		when(cardService.getCardById(card.getId())).thenReturn(card);
 		
-		CardController controller = new CardController();
+		CardResource controller = new CardResource();
 		controller.cardService = cardService;
 		
 		CardModel actualCard = controller.getCardById(card.getId());
@@ -64,7 +64,7 @@ public class CardControllerTest {
 		
 		CardSetService cardSetService = mock(CardSetService.class);
 		
-		CardController controller = new CardController();
+		CardResource controller = new CardResource();
 		controller.cardService = cardService;
 		controller.cardSetService = cardSetService;
 		

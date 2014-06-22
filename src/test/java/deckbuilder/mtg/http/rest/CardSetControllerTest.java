@@ -16,8 +16,8 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.CardSetController.CardSetCreateContext;
-import deckbuilder.mtg.http.rest.CardSetController.CardSetSaveResponse;
+import deckbuilder.mtg.http.rest.CardSetResource.CardSetCreateContext;
+import deckbuilder.mtg.http.rest.CardSetResource.CardSetSaveResponse;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
 import deckbuilder.mtg.http.rest.models.CardSetModel;
 import deckbuilder.mtg.service.CardSetService;
@@ -35,7 +35,7 @@ public class CardSetControllerTest {
 		CardSetService cardSetService = mock(CardSetService.class);
 		when(cardSetService.getCardSetById(cardSet.getId())).thenReturn(cardSet);
 		
-		CardSetController controller = new CardSetController();
+		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;
 		
 		CardSetModel resource = controller.getCardSetById(cardSet.getId());
@@ -60,7 +60,7 @@ public class CardSetControllerTest {
 		CardSetService cardSetService = mock(CardSetService.class);
 		when(cardSetService.getCardSets()).thenReturn(Arrays.asList(cardSet1, cardSet2));
 		
-		CardSetController controller = new CardSetController();
+		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;
 		CardSetListModel resources = controller.list();
 		
@@ -85,7 +85,7 @@ public class CardSetControllerTest {
 		
 		CardSetCreateContext cardSetData = new CardSetCreateContext();
 		
-		CardSetController controller = new CardSetController();
+		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;
 		
 		Response response = controller.createCardSet(cardSetData, securityContext);

@@ -22,11 +22,11 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import deckbuilder.mtg.facebook.FacebookService;
-import deckbuilder.mtg.http.rest.CardController;
-import deckbuilder.mtg.http.rest.CardSetController;
-import deckbuilder.mtg.http.rest.DeckCardController;
-import deckbuilder.mtg.http.rest.DeckController;
-import deckbuilder.mtg.http.rest.UserController;
+import deckbuilder.mtg.http.rest.CardResource;
+import deckbuilder.mtg.http.rest.CardSetResource;
+import deckbuilder.mtg.http.rest.DeckCardResource;
+import deckbuilder.mtg.http.rest.DeckResource;
+import deckbuilder.mtg.http.rest.UserResource;
 
 public class HttpServer {
 	private Injector appInjector;
@@ -94,11 +94,11 @@ public class HttpServer {
 					serve("/facebook/auth").with(FacebookAuthServlet.class);
 					
 					//controllers
-					bind(CardController.class).in(Singleton.class);
-					bind(DeckController.class).in(Singleton.class);
-					bind(DeckCardController.class).in(Singleton.class);
-					bind(CardSetController.class).in(Singleton.class);
-					bind(UserController.class).in(Singleton.class);
+					bind(CardResource.class).in(Singleton.class);
+					bind(DeckResource.class).in(Singleton.class);
+					bind(DeckCardResource.class).in(Singleton.class);
+					bind(CardSetResource.class).in(Singleton.class);
+					bind(UserResource.class).in(Singleton.class);
 					
 					//setup persistence for all resources
 					filter("/*").through(PersistFilter.class);

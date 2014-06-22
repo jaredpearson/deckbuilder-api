@@ -32,7 +32,7 @@ import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.UserService;
 
 @Path("/{version}/deck")
-public class DeckController {
+public class DeckResource {
 	
 	@Inject
 	EntityUrlFactory urlFactory;

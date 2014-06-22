@@ -17,8 +17,8 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.DeckController.DeckCreateContext;
-import deckbuilder.mtg.http.rest.DeckController.DeckSaveResponse;
+import deckbuilder.mtg.http.rest.DeckResource.DeckCreateContext;
+import deckbuilder.mtg.http.rest.DeckResource.DeckSaveResponse;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.UserService;
@@ -37,7 +37,7 @@ public class DeckControllerTest {
 		
 		SecurityContext securityContext = mockSecurityContext(user);
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		List<DeckModel> decks = controller.list(securityContext);
 		
@@ -56,7 +56,7 @@ public class DeckControllerTest {
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		DeckModel actualDeck = controller.getDeckById(deck.getId());
 		
@@ -86,7 +86,7 @@ public class DeckControllerTest {
 		
 		UserService userService = mock(UserService.class);
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		controller.userService = userService;
 		Response saveResponse = controller.createDeck(deckData, securityContext);
@@ -115,7 +115,7 @@ public class DeckControllerTest {
 		//change the deck name
 		deck.setName("New Name!");
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		controller.updateDeck(deck.getId(), deck, securityContext);
 		
@@ -139,7 +139,7 @@ public class DeckControllerTest {
 		//change the deck name
 		deck.setName("New Name!");
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		Response response = controller.updateDeck(deck.getId(), deck, securityContext);
 		
@@ -159,7 +159,7 @@ public class DeckControllerTest {
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		controller.deleteDeck(deck.getId(), securityContext);
 		
@@ -180,7 +180,7 @@ public class DeckControllerTest {
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
 		
-		DeckController controller = new DeckController();
+		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
 		Response response = controller.deleteDeck(deck.getId(), securityContext);
 		

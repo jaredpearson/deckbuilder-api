@@ -25,7 +25,7 @@ import deckbuilder.mtg.service.CardSetService;
 @Singleton
 @Path("/{version}/card")
 @Produces(MediaType.APPLICATION_JSON)
-public class CardController {
+public class CardResource {
 	
 	@Inject
 	EntityUrlFactory urlFactory;
