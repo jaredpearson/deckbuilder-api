@@ -34,11 +34,14 @@ public class CardSetResource {
 	@Inject
 	CardSetService cardSetService;
 	
+	@Inject
+	BuildContextFactory buildContextFactory;
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CardSetListModel list(@Context UriInfo uriInfo) throws Exception {
 		final List<CardSet> sets = cardSetService.getCardSets();
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		final List<CardSetModel> resources = Lists.newArrayListWithExpectedSize(sets.size());
 		for (CardSet cardSet : sets) {
 			final CardSetModel resource = new CardSetModelBuilder(urlFactory, cardSet).build(context);

@@ -24,11 +24,14 @@ public class CardSetIdCardsResource {
 	@Inject
 	CardSetService cardSetService;
 	
+	@Inject
+	BuildContextFactory buildContextFactory;
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CardSetCardsModel getCardsForSet(@Context UriInfo uriInfo, @PathParam("id") Long id) throws Exception {
 		final CardSet set = cardSetService.getCardSetById(id);
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new CardSetCardsModelBuilder(urlFactory, set).build(context);
 	}
 	

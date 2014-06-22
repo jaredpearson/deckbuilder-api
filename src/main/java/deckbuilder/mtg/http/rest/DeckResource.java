@@ -41,6 +41,9 @@ public class DeckResource {
 	EntityUrlFactory urlFactory;
 	
 	@Inject
+	BuildContextFactory buildContextFactory;
+	
+	@Inject
 	DeckService deckService;
 	
 	@Inject
@@ -56,7 +59,7 @@ public class DeckResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DeckModel> list(@Context SecurityContext securityContext, @Context UriInfo uriInfo) throws Exception {
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		final List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
 		
 		final ArrayList<DeckModel> resources = Lists.newArrayListWithExpectedSize(decks.size());

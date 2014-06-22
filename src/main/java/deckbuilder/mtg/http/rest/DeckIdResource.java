@@ -32,12 +32,15 @@ public class DeckIdResource {
 	
 	@Inject
 	DeckService deckService;
+	
+	@Inject
+	BuildContextFactory buildContextFactory;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeckModel getDeckById(@Context UriInfo uriInfo, @PathParam("id") Long id) throws Exception {
 		final Deck deck = deckService.getDeckById(id);
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new DeckModelBuilder(urlFactory, deck).build(context);
 	}
 

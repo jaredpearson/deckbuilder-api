@@ -23,11 +23,14 @@ public class DeckCardIdResource {
 	@Inject
 	DeckCardService deckCardService;
 	
+	@Inject
+	BuildContextFactory buildContextFactory;
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeckCardModel getDeckCardById(@Context UriInfo uriInfo, @PathParam("id") Long deckCardId) throws Exception {
 		final DeckCard deckCard = deckCardService.getDeckCardById(deckCardId);
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new DeckCardModelBuilder(urlFactory, deckCard).build(context);
 	}
 	

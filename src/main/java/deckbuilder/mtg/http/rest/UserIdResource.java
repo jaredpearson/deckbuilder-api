@@ -24,11 +24,14 @@ public class UserIdResource {
 	@Inject
 	UserService userService;
 	
+	@Inject
+	BuildContextFactory buildContextFactory;
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserModel getUserById(@Context UriInfo uriInfo, @PathParam("id") Long id) {
 		final User user = userService.getUserById(id);
-		final BuildContext context = BuildContextFactory.create(uriInfo);
+		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new UserModelBuilder(urlFactory, user).build(context);
 	}
 	

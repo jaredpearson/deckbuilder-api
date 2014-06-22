@@ -161,15 +161,23 @@ public class Main {
 				}
 			}, 
 			
-			//Application specific services module
+			//Application module
 			new AbstractModule() {
 				@Override
 				protected void configure() {
+					//Application specific services module
 					bind(UserService.class).to(DefaultUserService.class).in(Singleton.class);
 					bind(CardService.class).to(DefaultCardService.class).in(Singleton.class);
 					bind(DeckService.class).to(DefaultDeckService.class).in(Singleton.class);
 					bind(DeckCardService.class).to(DefaultDeckCardService.class).in(Singleton.class);
 					bind(CardSetService.class).to(DefaultCardSetService.class).in(Singleton.class);
+				}
+				
+				@Provides
+				@Named("currentVersion")
+				@Singleton
+				private Version currentVersion() {
+					return new Version("v1");
 				}
 				
 				@Provides
