@@ -1,12 +1,28 @@
 package deckbuilder.mtg.http.rest;
 
-import deckbuilder.mtg.entities.User;
+import java.io.Serializable;
 
-public class UserResource extends Resource {
-	private static final long serialVersionUID = 1L;
+import javax.annotation.Nonnull;
 
-	public UserResource(User user) {
-		this.putEntityUrl(User.class, user.getId());
-		put("id", user.getId());
+public class UserResource implements Serializable {
+	private static final long serialVersionUID = -4416135079669226127L;
+	private final String url;
+	private final long id;
+	
+	public UserResource(@Nonnull String url, long id) {
+		assert url != null;
+		this.url = url;
+		this.id = id;
+	}
+	
+	/**
+	 * Gets the URL of this
+	 */
+	public String getUrl() {
+		return url;
+	}
+	
+	public long getId() {
+		return id;
 	}
 }

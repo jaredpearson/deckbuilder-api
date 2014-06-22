@@ -1,42 +1,51 @@
 package deckbuilder.mtg.http.rest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
 
 import deckbuilder.mtg.entities.CardSet;
 
-public class CardSetResource extends Resource {
+/**
+ * Output resource for a {@link CardSet}
+ * @author jared.pearson
+ */
+public class CardSetResource implements Serializable {
 	private static final long serialVersionUID = -4482212674496033845L;
+	private final String url;
+	private final String name;
+	private final String abbreviation;
+	private final String language;
+	private final String cardsUrl;
 	
-	private CardSetResource() {
+	public CardSetResource(String url, String name, String abbreviation, String language, @Nonnull String cardsUrl) {
+		this.url = url;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.language = language;
+		this.cardsUrl = cardsUrl;
 	}
 	
-	private void setSimpleProperties(CardSet cardSet) {
-		this.putEntityUrl(CardSet.class, cardSet.getId());
-		this.put("name", cardSet.getName());
-		this.put("abbreviation", cardSet.getAbbreviation());
-		this.put("language", cardSet.getLanguage());
-	}
-
-	public static CardSetResource create(CardSet cardSet) {
-		CardSetResource resource = new CardSetResource();
-		resource.setSimpleProperties(cardSet);
-		resource.put("cards", CardResource.createWithLinkedReferences(cardSet.getCards()));
-		return resource;
+	/**
+	 * Gets the URL to this {@link CardSetResource}
+	 */
+	public String getUrl() {
+		return url;
 	}
 	
-	public static CardSetResource createWithLinkedReferences(CardSet cardSet) {
-		CardSetResource resource = new CardSetResource();
-		resource.setSimpleProperties(cardSet);
-		resource.put("cards", CardLink.create(cardSet.getCards()));
-		return resource;
+	public String getName() {
+		return name;
 	}
 	
-	public static List<CardSetResource> create(List<CardSet> cardSets) {
-		ArrayList<CardSetResource> resources = new ArrayList<>(cardSets.size());
-		for(CardSet cardSet : cardSets) {
-			resources.add(create(cardSet));
-		}
-		return resources;
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+	
+	public String getLanguage() {
+		return language;
+	}
+	
+	public String getCardsUrl() {
+		return cardsUrl;
 	}
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import com.google.inject.persist.UnitOfWork;
@@ -30,6 +31,9 @@ import deckbuilder.mtg.service.UserService;
 public class DeckController {
 	
 	@Inject
+	EntityUrlFactory urlFactory;
+	
+	@Inject
 	DeckService deckService;
 	
 	@Inject
@@ -41,12 +45,13 @@ public class DeckController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DeckResource> list(@Context SecurityContext securityContext) throws Exception {
-		Principal principal = (Principal)securityContext.getUserPrincipal();
-		List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
+		final Principal principal = (Principal)securityContext.getUserPrincipal();
+		final List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
 		
-		ArrayList<DeckResource> resources = new ArrayList<>();
+		final ArrayList<DeckResource> resources = Lists.newArrayListWithExpectedSize(decks.size());
 		for(Deck deck : decks) {
-			resources.add(DeckResource.create(deck));
+			final DeckResourceBuilder builder = new DeckResourceBuilder(urlFactory, deck);
+			resources.add(builder.build());
 		}
 		return resources;
 	}
@@ -55,8 +60,16 @@ public class DeckController {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeckResource getDeckById(@PathParam("id") Long id) throws Exception {
-		Deck deck = deckService.getDeckById(id);
-		return DeckResource.create(deck);
+		final Deck deck = deckService.getDeckById(id);
+		return new DeckResourceBuilder(urlFactory, deck).build();
+	}
+	
+	@GET
+	@Path("/{id}/cards")
+	@Produces(MediaType.APPLICATION_JSON)
+	public DeckCardsResource getCardsForDeck(@PathParam("id") Long id) throws Exception {
+		final Deck deck = deckService.getDeckById(id);
+		return new DeckCardsResourceBuilder(urlFactory, deck).build();
 	}
 	
 	@POST
@@ -89,7 +102,7 @@ public class DeckController {
 	@Path("/{id}")
 	@Transactional
 	public Response updateDeck(@PathParam("id") Long id, Deck deck, @Context SecurityContext securityContext) throws Exception {
-		Deck loadedDeck = deckService.getDeckById(id);
+		final Deck loadedDeck = deckService.getDeckById(id);
 		
 		//only the owner can update the deck
 		Principal principal = (Principal)securityContext.getUserPrincipal();
@@ -106,7 +119,7 @@ public class DeckController {
 	@Path("/{id}")
 	@Transactional
 	public Response deleteDeck(@PathParam("id") Long id, @Context SecurityContext securityContext) throws Exception {
-		Deck deck = deckService.getDeckById(id);
+		final Deck deck = deckService.getDeckById(id);
 		if(deck != null) {
 			//only the owner can update the deck
 			Principal principal = (Principal)securityContext.getUserPrincipal();

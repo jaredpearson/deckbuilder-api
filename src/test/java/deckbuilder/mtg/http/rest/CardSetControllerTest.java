@@ -5,7 +5,6 @@ import static deckbuilder.mtg.http.rest.SecurityTestUtils.*;
 import static deckbuilder.mtg.http.rest.UserTestUtils.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -61,10 +60,10 @@ public class CardSetControllerTest {
 		
 		CardSetController controller = new CardSetController();
 		controller.cardSetService = cardSetService;
-		List<CardSetResource> resources = controller.list();
+		CardSetListResource resources = controller.list();
 		
 		Assert.assertNotNull("Expected the resources returned by list to not be null", resources);
-		Assert.assertEquals("Expected there to be all of the resources returned", 2, resources.size());
+		Assert.assertEquals("Expected there to be all of the resources returned", 2, resources.getCardSets().size());
 	}
 	
 	@Test

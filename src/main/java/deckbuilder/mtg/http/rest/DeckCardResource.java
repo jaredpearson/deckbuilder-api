@@ -1,50 +1,43 @@
 package deckbuilder.mtg.http.rest;
 
-import deckbuilder.mtg.entities.DeckCard;
+import java.io.Serializable;
 
-public class DeckCardResource extends Resource {
-	private static final long serialVersionUID = 1L;
-	
-	private DeckCardResource() {
+import javax.annotation.Nonnull;
+
+public class DeckCardResource implements Serializable {
+	private static final long serialVersionUID = -3698407646536889711L;
+	private final String url;
+	private final long id;
+	private final int quantity;
+	private final String cardUrl;
+	private final String deckUrl;
+
+	public DeckCardResource(@Nonnull String url, long id, int quantity, @Nonnull String cardUrl, @Nonnull String deckUrl) {
+		assert url != null;
+		this.url = url;
+		this.id = id;
+		this.quantity = quantity;
+		this.cardUrl = cardUrl;
+		this.deckUrl = deckUrl;
 	}
 	
-	private void setSimpleProperties(DeckCard deckCard) {
-		this.put("id", deckCard.getId());
-		this.put("quantity", deckCard.getQuantity());
+	public String getUrl() {
+		return url;
 	}
 	
-	/**
-	 * Creates a new DeckCardResource where the references are full resources.
-	 */
-	public static DeckCardResource create(DeckCard deckCard) {
-		DeckCardResource resource = new DeckCardResource();
-		resource.setSimpleProperties(deckCard);
-		
-		if(deckCard.getCard() != null) {
-			resource.put("card", CardResource.createWithLinkedReferences(deckCard.getCard()));
-		}
-		
-		if(deckCard.getDeck() != null) {
-			resource.put("deck", DeckResource.createWithLinkedReferences(deckCard.getDeck()));
-		}
-		return resource;
+	public long getId() {
+		return id;
 	}
 	
-	/**
-	 * Creates a new DeckCardResource where the references are links instead of full resources.
-	 * @param deckCard The {@link DeckCard} to create a reference for
-	 */
-	public static DeckCardResource createWithLinkedReferences(DeckCard deckCard) {
-		DeckCardResource resource = new DeckCardResource();
-		resource.setSimpleProperties(deckCard);
-		
-		if(deckCard.getCard() != null) {
-			resource.put("card", new CardLink(deckCard.getCard()));
-		}
-		
-		if(deckCard.getDeck() != null) {
-			resource.put("deck", new DeckLink(deckCard.getDeck()));
-		}
-		return resource;
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public String getCardUrl() {
+		return cardUrl;
+	}
+	
+	public String getDeckUrl() {
+		return deckUrl;
 	}
 }

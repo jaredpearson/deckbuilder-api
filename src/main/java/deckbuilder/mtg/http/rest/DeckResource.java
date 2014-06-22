@@ -1,61 +1,57 @@
 package deckbuilder.mtg.http.rest;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-import deckbuilder.mtg.entities.Deck;
-import deckbuilder.mtg.entities.DeckCard;
+import javax.annotation.Nonnull;
 
-public class DeckResource extends Resource {
-	private static final long serialVersionUID = 1L;
-
-	private DeckResource() {
-	}
+public class DeckResource implements Serializable {
+	private static final long serialVersionUID = -257383003130744950L;
+	private final String url;
+	private final long id;
+	private final String name;
+	private final String cardsUrl;
+	private final String ownerUrl;
 	
-	private void setSimpleProperties(Deck deck) {
-		this.putEntityUrl(Deck.class, deck.getId());
-		this.put("id", deck.getId());
-		this.put("name", deck.getName());
-	}
-	
-	/**
-	 * Creates a {@link DeckResource} in which all of the references are full resources.
-	 */
-	public static DeckResource create(Deck deck) {
-		DeckResource deckResource = new DeckResource();
-		deckResource.setSimpleProperties(deck);
-		
-		if(deck.getOwner() != null) {
-			deckResource.put("owner", new UserResource(deck.getOwner()));
-		}
-		
-		if(deck.getCards() != null) {
-			ArrayList<DeckCardResource> deckCardResources = new ArrayList<>();
-			for(DeckCard deckCard : deck.getCards()) {
-				deckCardResources.add(DeckCardResource.createWithLinkedReferences(deckCard));
-			}
-			deckResource.put("cards", deckCardResources);
-		}
-		return deckResource;
+	public DeckResource(
+			@Nonnull String url, 
+			long id, 
+			@Nonnull String name, 
+			@Nonnull String cardsUrl, 
+			@Nonnull String ownerUrl) {
+		assert url != null;
+		assert name != null;
+		assert cardsUrl != null;
+		assert ownerUrl != null;
+		this.url = url;
+		this.id = id;
+		this.name = name;
+		this.cardsUrl = cardsUrl;
+		this.ownerUrl = ownerUrl;
 	}
 	
 	/**
-	 * Creates a new DeckResource where the references are links instead of full resources.
+	 * Gets the URL of this
 	 */
-	public static DeckResource createWithLinkedReferences(Deck deck) {
-		DeckResource deckResource = new DeckResource();
-		deckResource.setSimpleProperties(deck);
-		
-		if(deck.getOwner() != null) {
-			deckResource.put("owner", new UserLink(deck.getOwner()));
-		}
-		
-		if(deck.getCards() != null) {
-			ArrayList<DeckCardLink> deckCardResources = new ArrayList<>();
-			for(DeckCard deckCard : deck.getCards()) {
-				deckCardResources.add(new DeckCardLink(deckCard));
-			}
-			deckResource.put("cards", deckCardResources);
-		}
-		return deckResource;
+	public String getUrl() {
+		return url;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	
+	/**
+	 * Gets the name of the deck
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	public String getCardsUrl() {
+		return cardsUrl;
+	}
+	
+	public String getOwnerUrl() {
+		return ownerUrl;
 	}
 }

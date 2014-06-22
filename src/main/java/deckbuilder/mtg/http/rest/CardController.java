@@ -26,6 +26,9 @@ import deckbuilder.mtg.service.CardSetService;
 public class CardController {
 	
 	@Inject
+	EntityUrlFactory urlFactory;
+	
+	@Inject
 	CardService cardService;
 	
 	@Inject
@@ -34,8 +37,8 @@ public class CardController {
 	@GET
 	@Path("/{id}")
 	public CardResource getCardById(@PathParam("id") long id) throws Exception {
-		Card card = cardService.getCardById(id);
-		return CardResource.createWithLinkedReferences(card);
+		final Card card = cardService.getCardById(id);
+		return new CardResourceBuilder(urlFactory, card).build();
 	}
 	
 	@POST

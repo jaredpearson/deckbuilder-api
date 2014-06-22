@@ -1,79 +1,93 @@
 package deckbuilder.mtg.http.rest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.Serializable;
 
 import deckbuilder.mtg.entities.Card;
 
-public class CardResource extends Resource {
+/**
+ * Resource for displaying {@link Card} entities
+ * @author jared.pearson
+ */
+public class CardResource implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	private final String url;
+	private final String name;
+	private final String castingCost;
+	private final String powerToughness;
+	private final String typeLine;
+	private final String rarity;
+	private final String text;
+	private final String setIndex;
+	private final String author;
+	private final String cardSetUrl;
 	
-	private CardResource() {
-	}
-	
-	private void setSimpleProperties(Card card) {
-		this.putEntityUrl(Card.class, card.getId());
-		this.put("id", card.getId());
-		this.put("name", card.getName());
-		this.putIfValue("castingCost", card.getCastingCost());
-		this.putIfValue("powerToughness", card.getPowerToughness());
-		this.putIfValue("typeLine", card.getTypeLine());
-		this.putIfValue("rarity", card.getRarity());
-		this.putIfValue("text", card.getText());
-		this.putIfValue("setIndex", card.getSetIndex());
-		this.putIfValue("author", card.getPowerToughness());
-	}
-	
-	public static CardResource create(Card card) {
-		CardResource resource = new CardResource();
-		resource.setSimpleProperties(card);
-		
-		if(card.getSet() != null) {
-			resource.put("set", CardSetResource.create(card.getSet()));
-		}
-		
-		return resource;
-	}
-	
-	public static List<CardResource> create(List<Card> cards) {
-		ArrayList<CardResource> resources = new ArrayList<>(cards.size());
-		for(Card card : cards) {
-			resources.add(create(card));
-		}
-		return resources;
-	}
-	
-	public static CardResource createWithLinkedReferences(Card card) {
-		CardResource resource = new CardResource();
-		resource.setSimpleProperties(card);
-		
-		if(card.getSet() != null) {
-			resource.put("set", new CardSetLink(card.getSet()));
-		}
-		
-		return resource;
-	}
-	
-	public static List<CardResource> createWithLinkedReferences(List<Card> cards) {
-		if(cards == null || cards.isEmpty()) {
-			return Collections.emptyList();
-		}
-		ArrayList<CardResource> resources = new ArrayList<>(cards.size());
-		for(Card card : cards) {
-			resources.add(createWithLinkedReferences(card));
-		}
-		return resources;
+	public CardResource(
+			final String url,
+			final String name,
+			final String castingCost,
+			final String powerToughness,
+			final String typeLine,
+			final String rarity,
+			final String text,
+			final String setIndex,
+			final String author, 
+			final String cardSetUrl) {
+		this.url = url;
+		this.name = name;
+		this.castingCost = castingCost;
+		this.powerToughness = powerToughness;
+		this.typeLine = typeLine;
+		this.rarity = rarity;
+		this.text = text;
+		this.setIndex = setIndex;
+		this.author = author;
+		this.cardSetUrl = cardSetUrl;
 	}
 	
 	/**
-	 * Puts the key value only if the value is not null.
+	 * Gets the URL of this resource
 	 */
-	private void putIfValue(String key, Object value) {
-		if(value == null) {
-			return;
-		}
-		this.put(key, value);
+	public String getUrl() {
+		return url;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getCastingCost() {
+		return castingCost;
+	}
+	
+	public String getPowerToughness() {
+		return powerToughness;
+	}
+	public String getTypeLine() {
+		return typeLine;
+	}
+	
+	public String getRarity() {
+		return rarity;
+	}
+	
+	public String getText() {
+		return text;
+	}
+	
+	public String getAuthor() {
+		return author;
+	}
+	
+	public String getSetIndex() {
+		return setIndex;
+	}
+	
+	/**
+	 * Gets the URL of the card set associated to this card
+	 */
+	public String getCardSetUrl() {
+		return cardSetUrl;
 	}
 	
 }

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
@@ -22,6 +23,8 @@ import deckbuilder.mtg.service.CardSetService;
 @Path("/{version}/set")
 @Produces(MediaType.APPLICATION_JSON)
 public class CardSetController {
+	@Inject
+	EntityUrlFactory urlFactory;
 	
 	@Inject
 	CardSetService cardSetService;
@@ -29,21 +32,27 @@ public class CardSetController {
 	@GET
 	@Path("/{id}")
 	public CardSetResource getCardSetById(@PathParam("id") Long id) throws Exception {
-		CardSet set = cardSetService.getCardSetById(id);
-		return CardSetResource.create(set);
+		final CardSet set = cardSetService.getCardSetById(id);
+		return new CardSetResourceBuilder(urlFactory, set).build();
 	}
 	
 	@GET
 	@Path("/{id}/cards")
-	public List<CardResource> getCardsForSet(@PathParam("id") Long id) throws Exception {
-		CardSet set = cardSetService.getCardSetById(id);
-		return CardResource.createWithLinkedReferences(set.getCards());
+	public CardSetCardsResource getCardsForSet(@PathParam("id") Long id) throws Exception {
+		final CardSet set = cardSetService.getCardSetById(id);
+		return new CardSetCardsResourceBuilder(urlFactory, set).build();
 	}
 	
 	@GET
-	public List<CardSetResource> list() throws Exception {
-		List<CardSet> sets = cardSetService.getCardSets();
-		return CardSetResource.create(sets);
+	public CardSetListResource list() throws Exception {
+		final List<CardSet> sets = cardSetService.getCardSets();
+		final List<CardSetResource> resources = Lists.newArrayListWithExpectedSize(sets.size());
+		for (CardSet cardSet : sets) {
+			final CardSetResource resource = new CardSetResourceBuilder(urlFactory, cardSet).build();
+			assert resource != null;
+			resources.add(resource);
+		}
+		return new CardSetListResource(resources);
 	}
 	
 	@POST

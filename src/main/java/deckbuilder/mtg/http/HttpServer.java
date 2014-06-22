@@ -26,6 +26,7 @@ import deckbuilder.mtg.http.rest.CardController;
 import deckbuilder.mtg.http.rest.CardSetController;
 import deckbuilder.mtg.http.rest.DeckCardController;
 import deckbuilder.mtg.http.rest.DeckController;
+import deckbuilder.mtg.http.rest.UserController;
 
 public class HttpServer {
 	private Injector appInjector;
@@ -97,6 +98,7 @@ public class HttpServer {
 					bind(DeckController.class).in(Singleton.class);
 					bind(DeckCardController.class).in(Singleton.class);
 					bind(CardSetController.class).in(Singleton.class);
+					bind(UserController.class).in(Singleton.class);
 					
 					//setup persistence for all resources
 					filter("/*").through(PersistFilter.class);
