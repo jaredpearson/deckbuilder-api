@@ -40,4 +40,12 @@ public class DefaultCardService implements CardService {
 		em.persist(card);
 		return card;
 	}
+	
+	@Override
+	public List<Card> getCardsById(List<Long> cardIds) {
+		EntityManager em = entityManagerProvider.get();
+		TypedQuery<Card> q = em.createQuery("select c from Card c where id in (:ids)", Card.class);
+		q.setParameter("ids", cardIds);
+		return q.getResultList();
+	}
 }

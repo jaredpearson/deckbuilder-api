@@ -17,7 +17,7 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.DeckResource.DeckCreateContext;
+import deckbuilder.mtg.http.rest.DeckResource.DeckCreateModel;
 import deckbuilder.mtg.http.rest.DeckResource.DeckSaveResponse;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.service.DeckService;
@@ -51,7 +51,7 @@ public class DeckControllerTest {
 		
 		SecurityContext securityContext = mockSecurityContext(user);
 
-		DeckCreateContext deckData = new DeckCreateContext();
+		DeckCreateModel deckData = new DeckCreateModel();
 		deckData.setName("Test");
 		deckData.setOwner(user.getId());
 		

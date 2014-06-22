@@ -2,6 +2,7 @@ package deckbuilder.mtg.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,7 +27,7 @@ public class Deck {
 	@JoinColumn(name="owner")
 	private User owner;
 	
-	@OneToMany(mappedBy="deck")
+	@OneToMany(mappedBy="deck", cascade=CascadeType.ALL)
 	private List<DeckCard> cards;
 	
 	public Long getId() {

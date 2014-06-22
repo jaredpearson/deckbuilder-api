@@ -20,4 +20,12 @@ public interface CardService {
 	 * @return Returns a fully instantiated card
 	 */
 	public Card createCard(Card card);
+	
+	/**
+	 * Attempts to find all of the cards from the specified card IDs. If the ID cannot be found, then
+	 * it is omitted and the other entities are returned.
+	 * @param cardIds The IDs of the cards to be found
+	 * @return Returns the entities that could be found
+	 */
+	public List<Card> getCardsById(List<Long> cardIds);
 }
