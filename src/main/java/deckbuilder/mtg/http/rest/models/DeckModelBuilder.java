@@ -74,10 +74,10 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 		this.ownerUrl = ownerUrl;
 	}
 
-	public DeckModel build() {
-		String url = this.url.build();
-		String cardsUrl = this.cardsUrl.build();
-		String ownerUrl = this.ownerUrl.build();
+	public DeckModel build(BuildContext context) {
+		String url = this.url.build(context);
+		String cardsUrl = this.cardsUrl.build(context);
+		String ownerUrl = this.ownerUrl.build(context);
 		return new DeckModel(url, id, name, cardsUrl, ownerUrl);
 	}
 }

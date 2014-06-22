@@ -29,8 +29,8 @@ public class CardModelBuilder implements Builder<CardModel> {
 	 * Builds an instance of the card resource
 	 */
 	@Override
-	public @Nonnull CardModel build() {
-		final String url = urlFactory.createEntityUrl(Card.class, card.getId()).build();
+	public @Nonnull CardModel build(BuildContext context) {
+		final String url = urlFactory.createEntityUrl(Card.class, card.getId()).build(context);
 		final String name = card.getName();
 		final String castingCost = card.getCastingCost();
 		final String powerToughness = card.getPowerToughness();
@@ -39,7 +39,7 @@ public class CardModelBuilder implements Builder<CardModel> {
 		final String text = card.getText();
 		final String setIndex = card.getSetIndex();
 		final String author = card.getAuthor();
-		final String cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId()).build();
+		final String cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId()).build(context);
 		final CardModel resource = new CardModel(url, name, castingCost, powerToughness, typeLine, rarity, text, setIndex, author, cardSetUrl);
 		return resource;
 	}

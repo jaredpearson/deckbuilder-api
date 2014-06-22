@@ -20,6 +20,7 @@ import com.google.inject.name.Named;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
@@ -27,6 +28,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import deckbuilder.mtg.Configuration;
 import deckbuilder.mtg.facebook.FacebookService;
+import deckbuilder.mtg.http.rest.BuildContextFactory;
 import deckbuilder.mtg.http.rest.CardIdResource;
 import deckbuilder.mtg.http.rest.CardResource;
 import deckbuilder.mtg.http.rest.CardSetIdCardsResource;
@@ -136,6 +138,9 @@ public class HttpServer {
 					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
 					bind(JpaNoResultExceptionMapper.class).in(Singleton.class);
 					bind(NoResultExceptionMapper.class).in(Singleton.class);
+					
+					//build context factory
+					bind(BuildContextFactory.class).in(RequestScoped.class);
 					
 					//resources
 					bind(CardResource.class).in(Singleton.class);

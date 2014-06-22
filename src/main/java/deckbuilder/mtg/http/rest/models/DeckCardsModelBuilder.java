@@ -29,12 +29,12 @@ public class DeckCardsModelBuilder implements Builder<DeckCardsModel> {
 	}
 	
 	@Override
-	public DeckCardsModel build() {
-		final String url = new DeckIdCardsResource.UrlBuilder(deck.getId()).build();
+	public DeckCardsModel build(BuildContext context) {
+		final String url = new DeckIdCardsResource.UrlBuilder(deck.getId()).build(context);
 		
 		final ArrayList<DeckCardModel> cards = Lists.newArrayListWithExpectedSize(deck.getCards().size());
 		for (DeckCard deckCard : deck.getCards()) {
-			final DeckCardModel deckCardResource = new DeckCardModelBuilder(urlFactory, deckCard).build();
+			final DeckCardModel deckCardResource = new DeckCardModelBuilder(urlFactory, deckCard).build(context);
 			assert deckCardResource != null;
 			cards.add(deckCardResource);
 		}

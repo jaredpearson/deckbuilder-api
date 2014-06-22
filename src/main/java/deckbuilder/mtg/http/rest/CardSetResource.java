@@ -11,12 +11,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
 import deckbuilder.mtg.http.rest.models.CardSetModel;
 import deckbuilder.mtg.http.rest.models.CardSetModelBuilder;
@@ -34,11 +36,12 @@ public class CardSetResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardSetListModel list() throws Exception {
+	public CardSetListModel list(@Context UriInfo uriInfo) throws Exception {
 		final List<CardSet> sets = cardSetService.getCardSets();
+		final BuildContext context = BuildContextFactory.create(uriInfo);
 		final List<CardSetModel> resources = Lists.newArrayListWithExpectedSize(sets.size());
 		for (CardSet cardSet : sets) {
-			final CardSetModel resource = new CardSetModelBuilder(urlFactory, cardSet).build();
+			final CardSetModel resource = new CardSetModelBuilder(urlFactory, cardSet).build(context);
 			assert resource != null;
 			resources.add(resource);
 		}

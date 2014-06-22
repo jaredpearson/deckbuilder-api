@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
@@ -26,6 +27,7 @@ import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.Principal;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.http.rest.models.DeckModelBuilder;
 import deckbuilder.mtg.service.CardService;
@@ -52,14 +54,15 @@ public class DeckResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<DeckModel> list(@Context SecurityContext securityContext) throws Exception {
+	public List<DeckModel> list(@Context SecurityContext securityContext, @Context UriInfo uriInfo) throws Exception {
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
+		final BuildContext context = BuildContextFactory.create(uriInfo);
 		final List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
 		
 		final ArrayList<DeckModel> resources = Lists.newArrayListWithExpectedSize(decks.size());
 		for(Deck deck : decks) {
 			final DeckModelBuilder builder = new DeckModelBuilder(urlFactory, deck);
-			resources.add(builder.build());
+			resources.add(builder.build(context));
 		}
 		return resources;
 	}

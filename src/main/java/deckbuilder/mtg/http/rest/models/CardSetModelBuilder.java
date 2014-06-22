@@ -26,12 +26,12 @@ public class CardSetModelBuilder implements Builder<CardSetModel> {
 	 * Creates a new {@link CardSetModel} instance.
 	 */
 	@Override
-	public CardSetModel build() {
-		final String url = urlFactory.createEntityUrl(CardSet.class, cardSet.getId()).build();
+	public CardSetModel build(BuildContext context) {
+		final String url = urlFactory.createEntityUrl(CardSet.class, cardSet.getId()).build(context);
 		final String name = cardSet.getName();
 		final String abbreviation = cardSet.getAbbreviation();
 		final String language = cardSet.getLanguage();
-		final String cardsUrl = new CardSetIdCardsResource.UrlBuilder(cardSet.getId()).build();
+		final String cardsUrl = new CardSetIdCardsResource.UrlBuilder(cardSet.getId()).build(context);
 		return new CardSetModel(url, name, abbreviation, language, cardsUrl);
 	}
 }

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,10 +31,12 @@ public class DeckIdResourceTest {
 		
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
+
+		UriInfo uriInfo = mock(UriInfo.class);
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
-		DeckModel actualDeck = resource.getDeckById(deck.getId());
+		DeckModel actualDeck = resource.getDeckById(uriInfo, deck.getId());
 		
 		Assert.assertNotNull("Expected getDeckById to return the deck", deck);
 		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), actualDeck.getId());

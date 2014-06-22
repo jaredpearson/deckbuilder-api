@@ -3,6 +3,8 @@ package deckbuilder.mtg.http.rest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import javax.ws.rs.core.UriInfo;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,13 +27,15 @@ public class CardIdResourceTest {
 		card.setName("Test");
 		card.setSet(cardSet);
 		
+		UriInfo uriInfo = mock(UriInfo.class);
+		
 		CardService cardService = mock(CardService.class);
 		when(cardService.getCardById(card.getId())).thenReturn(card);
 		
 		CardIdResource resource = new CardIdResource();
 		resource.cardService = cardService;
 		
-		CardModel actualCard = resource.getCardById(card.getId());
+		CardModel actualCard = resource.getCardById(uriInfo, card.getId());
 		
 		Assert.assertNotNull("Expected getCardById to not return null", actualCard);
 		Assert.assertEquals("Expected the card resource to include the name of the card", card.getName(), actualCard.getName());

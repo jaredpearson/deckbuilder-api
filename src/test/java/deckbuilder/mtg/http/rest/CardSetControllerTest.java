@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,12 +38,14 @@ public class CardSetControllerTest {
 		cardSet2.setAbbreviation("ts2");
 		cardSet2.setLanguage("en");
 		
+		UriInfo uriInfo = mock(UriInfo.class);
+		
 		CardSetService cardSetService = mock(CardSetService.class);
 		when(cardSetService.getCardSets()).thenReturn(Arrays.asList(cardSet1, cardSet2));
 		
 		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;
-		CardSetListModel resources = controller.list();
+		CardSetListModel resources = controller.list(uriInfo);
 		
 		Assert.assertNotNull("Expected the resources returned by list to not be null", resources);
 		Assert.assertEquals("Expected there to be all of the resources returned", 2, resources.getCardSets().size());

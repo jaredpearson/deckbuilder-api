@@ -1,5 +1,7 @@
 package deckbuilder.mtg.http.rest;
 
+import java.net.URI;
+
 /**
  * Builds the instance of the specified type
  * @author jared.pearson
@@ -10,5 +12,9 @@ public interface Builder<T> {
 	/**
 	 * Builds the instance of the type
 	 */
-	public T build();
+	public T build(BuildContext context);
+	
+	public static interface BuildContext {
+		public URI getRequestUri();
+	}
 }

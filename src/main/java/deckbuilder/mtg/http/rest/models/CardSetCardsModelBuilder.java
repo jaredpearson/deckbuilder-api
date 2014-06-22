@@ -28,12 +28,12 @@ public class CardSetCardsModelBuilder implements Builder<CardSetCardsModel> {
 	}
 
 	@Override
-	public CardSetCardsModel build() {
+	public CardSetCardsModel build(BuildContext context) {
 		final List<Card> cards = cardSet.getCards();
 		final ArrayList<CardModel> resources = Lists.newArrayListWithExpectedSize(cards.size());
 		for(Card card : cards) {
 			final CardModelBuilder resourceBuilder = new CardModelBuilder(urlFactory, card);
-			resources.add(resourceBuilder.build());
+			resources.add(resourceBuilder.build(context));
 		}
 		return new CardSetCardsModel(resources);
 	}

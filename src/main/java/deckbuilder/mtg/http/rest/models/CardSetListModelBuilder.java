@@ -24,10 +24,10 @@ public class CardSetListModelBuilder implements Builder<CardSetListModel> {
 	 * Builds a list of {@link CardSetModel} instances
 	 */
 	@Override
-	public CardSetListModel build() {
+	public CardSetListModel build(BuildContext context) {
 		final List<CardSetModel> resources = Lists.newArrayListWithExpectedSize(cardSets.size());
 		for (CardSetModelBuilder setBuilder : cardSets) {
-			final CardSetModel cardSet = setBuilder.build();
+			final CardSetModel cardSet = setBuilder.build(context);
 			assert cardSet != null;
 			resources.add(cardSet);
 		}

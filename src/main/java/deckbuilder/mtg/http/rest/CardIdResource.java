@@ -5,9 +5,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import deckbuilder.mtg.entities.Card;
+import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.CardModel;
 import deckbuilder.mtg.http.rest.models.CardModelBuilder;
 import deckbuilder.mtg.service.CardService;
@@ -23,9 +26,10 @@ public class CardIdResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardModel getCardById(@PathParam("id") long id) throws Exception {
+	public CardModel getCardById(@Context UriInfo uriInfo, @PathParam("id") long id) throws Exception {
 		final Card card = cardService.getCardById(id);
-		return new CardModelBuilder(urlFactory, card).build();
+		final BuildContext buildContext = BuildContextFactory.create(uriInfo);
+		return new CardModelBuilder(urlFactory, card).build(buildContext);
 	}
 	
 	/**
@@ -40,7 +44,7 @@ public class CardIdResource {
 		}
 		
 		@Override
-		public String build() {
+		protected String buildPath(BuildContext context) {
 			return "/v1/card/" + id;
 		}
 	}

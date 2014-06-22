@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,12 +35,14 @@ public class DeckControllerTest {
 		
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDecksForOwner(user.getId())).thenReturn(Arrays.asList(deck));
+
+		UriInfo uriInfo = mock(UriInfo.class);
 		
 		SecurityContext securityContext = mockSecurityContext(user);
 		
 		DeckResource controller = new DeckResource();
 		controller.deckService = deckService;
-		List<DeckModel> decks = controller.list(securityContext);
+		List<DeckModel> decks = controller.list(securityContext, uriInfo);
 		
 		Assert.assertEquals("Expected list to return all available decks", 1, decks.size());
 		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), decks.get(0).getId());
