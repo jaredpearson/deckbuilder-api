@@ -18,6 +18,11 @@ import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.models.CardSetCardsModel;
+import deckbuilder.mtg.http.rest.models.CardSetCardsModelBuilder;
+import deckbuilder.mtg.http.rest.models.CardSetListModel;
+import deckbuilder.mtg.http.rest.models.CardSetModel;
+import deckbuilder.mtg.http.rest.models.CardSetModelBuilder;
 import deckbuilder.mtg.service.CardSetService;
 
 @Path("/{version}/set")

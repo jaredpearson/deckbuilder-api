@@ -1,4 +1,4 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
  * Builder for {@link CardSetCardsModel} instances

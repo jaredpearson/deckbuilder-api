@@ -1,8 +1,10 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import javax.annotation.Nonnull;
 
 import deckbuilder.mtg.entities.User;
+import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
  * Builds instances of {@link UserModel}

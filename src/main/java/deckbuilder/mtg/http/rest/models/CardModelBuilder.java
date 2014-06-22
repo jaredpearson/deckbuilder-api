@@ -1,15 +1,17 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import javax.annotation.Nonnull;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
  * Builder for card resource instances
  * @author jared.pearson
  */
-class CardModelBuilder implements Builder<CardModel> {
+public class CardModelBuilder implements Builder<CardModel> {
 	private final EntityUrlFactory urlFactory;
 	private final Card card;
 	

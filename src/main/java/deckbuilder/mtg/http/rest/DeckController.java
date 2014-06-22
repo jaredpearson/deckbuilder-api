@@ -24,6 +24,10 @@ import com.google.inject.persist.UnitOfWork;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.Principal;
+import deckbuilder.mtg.http.rest.models.DeckCardsModel;
+import deckbuilder.mtg.http.rest.models.DeckCardsModelBuilder;
+import deckbuilder.mtg.http.rest.models.DeckModel;
+import deckbuilder.mtg.http.rest.models.DeckModelBuilder;
 import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.UserService;
 

@@ -19,6 +19,7 @@ import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.DeckController.DeckCreateContext;
 import deckbuilder.mtg.http.rest.DeckController.DeckSaveResponse;
+import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.UserService;
 

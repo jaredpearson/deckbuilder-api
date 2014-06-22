@@ -18,6 +18,8 @@ import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.CardSetController.CardSetCreateContext;
 import deckbuilder.mtg.http.rest.CardSetController.CardSetSaveResponse;
+import deckbuilder.mtg.http.rest.models.CardSetListModel;
+import deckbuilder.mtg.http.rest.models.CardSetModel;
 import deckbuilder.mtg.service.CardSetService;
 
 public class CardSetControllerTest {

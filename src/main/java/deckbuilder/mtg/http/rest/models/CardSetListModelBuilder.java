@@ -1,10 +1,12 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
+
+import deckbuilder.mtg.http.rest.Builder;
 
 /**
  * Builder for instances of {@link CardSetListModel}

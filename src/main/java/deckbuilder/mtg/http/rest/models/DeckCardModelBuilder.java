@@ -1,10 +1,12 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import javax.annotation.Nonnull;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
+import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
  * Creates a new DeckCardResource where the references are full resources.

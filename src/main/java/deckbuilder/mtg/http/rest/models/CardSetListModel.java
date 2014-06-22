@@ -1,4 +1,4 @@
-package deckbuilder.mtg.http.rest;
+package deckbuilder.mtg.http.rest.models;
 
 import java.util.List;
 

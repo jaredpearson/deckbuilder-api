@@ -17,6 +17,7 @@ import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.CardController.CardCreateContext;
 import deckbuilder.mtg.http.rest.CardController.CardSaveContext;
+import deckbuilder.mtg.http.rest.models.CardModel;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
 

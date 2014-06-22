@@ -17,6 +17,8 @@ import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
+import deckbuilder.mtg.http.rest.models.CardModel;
+import deckbuilder.mtg.http.rest.models.CardModelBuilder;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
 
