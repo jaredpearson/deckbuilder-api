@@ -25,6 +25,8 @@ import deckbuilder.mtg.facebook.FacebookService;
 import deckbuilder.mtg.http.rest.CardResource;
 import deckbuilder.mtg.http.rest.CardSetResource;
 import deckbuilder.mtg.http.rest.DeckCardResource;
+import deckbuilder.mtg.http.rest.DeckIdCardsResource;
+import deckbuilder.mtg.http.rest.DeckIdResource;
 import deckbuilder.mtg.http.rest.DeckResource;
 import deckbuilder.mtg.http.rest.UserResource;
 
@@ -96,6 +98,8 @@ public class HttpServer {
 					//controllers
 					bind(CardResource.class).in(Singleton.class);
 					bind(DeckResource.class).in(Singleton.class);
+					bind(DeckIdResource.class).in(Singleton.class);
+					bind(DeckIdCardsResource.class).in(Singleton.class);
 					bind(DeckCardResource.class).in(Singleton.class);
 					bind(CardSetResource.class).in(Singleton.class);
 					bind(UserResource.class).in(Singleton.class);

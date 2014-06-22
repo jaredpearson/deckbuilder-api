@@ -24,8 +24,6 @@ import com.google.inject.persist.UnitOfWork;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.Principal;
-import deckbuilder.mtg.http.rest.models.DeckCardsModel;
-import deckbuilder.mtg.http.rest.models.DeckCardsModelBuilder;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.http.rest.models.DeckModelBuilder;
 import deckbuilder.mtg.service.DeckService;
@@ -58,22 +56,6 @@ public class DeckResource {
 			resources.add(builder.build());
 		}
 		return resources;
-	}
-	
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public DeckModel getDeckById(@PathParam("id") Long id) throws Exception {
-		final Deck deck = deckService.getDeckById(id);
-		return new DeckModelBuilder(urlFactory, deck).build();
-	}
-	
-	@GET
-	@Path("/{id}/cards")
-	@Produces(MediaType.APPLICATION_JSON)
-	public DeckCardsModel getCardsForDeck(@PathParam("id") Long id) throws Exception {
-		final Deck deck = deckService.getDeckById(id);
-		return new DeckCardsModelBuilder(urlFactory, deck).build();
 	}
 	
 	@POST

@@ -46,25 +46,6 @@ public class DeckControllerTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
-		User user = createTestUser();
-		
-		Deck deck = new Deck();
-		deck.setId(1l);
-		deck.setOwner(user);
-		
-		DeckService deckService = mock(DeckService.class);
-		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
-		
-		DeckResource controller = new DeckResource();
-		controller.deckService = deckService;
-		DeckModel actualDeck = controller.getDeckById(deck.getId());
-		
-		Assert.assertNotNull("Expected getDeckById to return the deck", deck);
-		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), actualDeck.getId());
-	}
-	
-	@Test
 	public void testCreateDeck() throws Exception {
 		User user = createTestUser();
 		
