@@ -36,7 +36,7 @@ public class CardSetControllerTest {
 		CardSetController controller = new CardSetController();
 		controller.cardSetService = cardSetService;
 		
-		CardSetResource resource = controller.getCardSetById(cardSet.getId());
+		CardSetModel resource = controller.getCardSetById(cardSet.getId());
 		
 		Assert.assertNotNull("Expected the resource returned by getCardSetById to not be null", resource);
 	}
@@ -60,7 +60,7 @@ public class CardSetControllerTest {
 		
 		CardSetController controller = new CardSetController();
 		controller.cardSetService = cardSetService;
-		CardSetListResource resources = controller.list();
+		CardSetListModel resources = controller.list();
 		
 		Assert.assertNotNull("Expected the resources returned by list to not be null", resources);
 		Assert.assertEquals("Expected there to be all of the resources returned", 2, resources.getCardSets().size());

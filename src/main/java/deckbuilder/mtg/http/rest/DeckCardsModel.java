@@ -9,12 +9,12 @@ import javax.annotation.Nonnull;
  * Resource used for displaying all of the cards associated to a deck 
  * @author jared.pearson
  */
-public class DeckCardsResource implements Serializable {
+public class DeckCardsModel implements Serializable {
 	private static final long serialVersionUID = -7745626452731068674L;
 	private final String url;
-	private final List<DeckCardResource> cards;
+	private final List<DeckCardModel> cards;
 	
-	public DeckCardsResource(@Nonnull String url, @Nonnull List<DeckCardResource> cards) {
+	public DeckCardsModel(@Nonnull String url, @Nonnull List<DeckCardModel> cards) {
 		assert url != null;
 		assert cards != null;
 		this.url = url;
@@ -31,7 +31,7 @@ public class DeckCardsResource implements Serializable {
 	/**
 	 * Gets the cards associated to the deck
 	 */
-	public List<DeckCardResource> getCards() {
+	public List<DeckCardModel> getCards() {
 		return cards;
 	}
 }

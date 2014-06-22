@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
-public class UserResource implements Serializable {
+public class UserModel implements Serializable {
 	private static final long serialVersionUID = -4416135079669226127L;
 	private final String url;
 	private final long id;
 	
-	public UserResource(@Nonnull String url, long id) {
+	public UserModel(@Nonnull String url, long id) {
 		assert url != null;
 		this.url = url;
 		this.id = id;

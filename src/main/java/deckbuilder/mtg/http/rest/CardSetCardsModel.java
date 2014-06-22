@@ -11,12 +11,12 @@ import deckbuilder.mtg.entities.CardSet;
  * Resource used for when a user requests to view the cards associated to a {@link CardSet} 
  * @author jared.pearson
  */
-public class CardSetCardsResource implements Serializable {
+public class CardSetCardsModel implements Serializable {
 	private static final long serialVersionUID = -7708196997068077632L;
 	
-	private final List<CardResource> cards;
+	private final List<CardModel> cards;
 	
-	public CardSetCardsResource(@Nonnull List<CardResource> cards) {
+	public CardSetCardsModel(@Nonnull List<CardModel> cards) {
 		assert cards != null;
 		this.cards = cards;
 	}
@@ -24,7 +24,7 @@ public class CardSetCardsResource implements Serializable {
 	/**
 	 * Gets the cards
 	 */
-	public List<CardResource> getCards() {
+	public List<CardModel> getCards() {
 		return cards;
 	}
 }

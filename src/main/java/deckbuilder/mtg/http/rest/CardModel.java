@@ -8,7 +8,7 @@ import deckbuilder.mtg.entities.Card;
  * Resource for displaying {@link Card} entities
  * @author jared.pearson
  */
-public class CardResource implements Serializable {
+public class CardModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String url;
@@ -22,7 +22,7 @@ public class CardResource implements Serializable {
 	private final String author;
 	private final String cardSetUrl;
 	
-	public CardResource(
+	public CardModel(
 			final String url,
 			final String name,
 			final String castingCost,

@@ -9,11 +9,11 @@ import deckbuilder.mtg.entities.DeckCard;
 /**
  * Creates a new DeckCardResource where the references are full resources.
  */
-public class DeckCardResourceBuilder implements Builder<DeckCardResource> {
+public class DeckCardModelBuilder implements Builder<DeckCardModel> {
 	private final EntityUrlFactory urlFactory;
 	private final DeckCard deckCard;
 	
-	public DeckCardResourceBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull DeckCard deckCard) {
+	public DeckCardModelBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull DeckCard deckCard) {
 		assert urlFactory != null;
 		assert deckCard != null;
 		this.urlFactory = urlFactory;
@@ -21,12 +21,12 @@ public class DeckCardResourceBuilder implements Builder<DeckCardResource> {
 	}
 	
 	@Override
-	public DeckCardResource build() {
+	public DeckCardModel build() {
 		final String url = urlFactory.createEntityUrl(DeckCard.class, deckCard.getId());
 		final long id = deckCard.getId();
 		final int quantity = (deckCard.getQuantity() == null) ? 1 : deckCard.getQuantity();
 		final String cardUrl = urlFactory.createEntityUrl(Card.class, deckCard.getCard().getId());
 		final String deckUrl = urlFactory.createEntityUrl(Deck.class, deckCard.getDeck().getId());
-		return new DeckCardResource(url, id, quantity, cardUrl, deckUrl);
+		return new DeckCardModel(url, id, quantity, cardUrl, deckUrl);
 	}
 }

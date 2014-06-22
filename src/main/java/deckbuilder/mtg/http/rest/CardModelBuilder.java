@@ -9,14 +9,14 @@ import deckbuilder.mtg.entities.CardSet;
  * Builder for card resource instances
  * @author jared.pearson
  */
-class CardResourceBuilder implements Builder<CardResource> {
+class CardModelBuilder implements Builder<CardModel> {
 	private final EntityUrlFactory urlFactory;
 	private final Card card;
 	
 	/**
-	 * Creates a new {@link CardResource} using the specified {@link Card} entity.
+	 * Creates a new {@link CardModel} using the specified {@link Card} entity.
 	 */
-	public CardResourceBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull Card card) {
+	public CardModelBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull Card card) {
 		assert urlFactory != null;
 		assert card != null;
 		this.urlFactory = urlFactory;
@@ -27,7 +27,7 @@ class CardResourceBuilder implements Builder<CardResource> {
 	 * Builds an instance of the card resource
 	 */
 	@Override
-	public @Nonnull CardResource build() {
+	public @Nonnull CardModel build() {
 		final String url = urlFactory.createEntityUrl(Card.class, card.getId());
 		final String name = card.getName();
 		final String castingCost = card.getCastingCost();
@@ -38,7 +38,7 @@ class CardResourceBuilder implements Builder<CardResource> {
 		final String setIndex = card.getSetIndex();
 		final String author = card.getAuthor();
 		final String cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId());
-		final CardResource resource = new CardResource(url, name, castingCost, powerToughness, typeLine, rarity, text, setIndex, author, cardSetUrl);
+		final CardModel resource = new CardModel(url, name, castingCost, powerToughness, typeLine, rarity, text, setIndex, author, cardSetUrl);
 		return resource;
 	}
 }

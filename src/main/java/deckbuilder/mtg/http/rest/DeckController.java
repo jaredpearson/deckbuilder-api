@@ -44,13 +44,13 @@ public class DeckController {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<DeckResource> list(@Context SecurityContext securityContext) throws Exception {
+	public List<DeckModel> list(@Context SecurityContext securityContext) throws Exception {
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
 		final List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
 		
-		final ArrayList<DeckResource> resources = Lists.newArrayListWithExpectedSize(decks.size());
+		final ArrayList<DeckModel> resources = Lists.newArrayListWithExpectedSize(decks.size());
 		for(Deck deck : decks) {
-			final DeckResourceBuilder builder = new DeckResourceBuilder(urlFactory, deck);
+			final DeckModelBuilder builder = new DeckModelBuilder(urlFactory, deck);
 			resources.add(builder.build());
 		}
 		return resources;
@@ -59,17 +59,17 @@ public class DeckController {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DeckResource getDeckById(@PathParam("id") Long id) throws Exception {
+	public DeckModel getDeckById(@PathParam("id") Long id) throws Exception {
 		final Deck deck = deckService.getDeckById(id);
-		return new DeckResourceBuilder(urlFactory, deck).build();
+		return new DeckModelBuilder(urlFactory, deck).build();
 	}
 	
 	@GET
 	@Path("/{id}/cards")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DeckCardsResource getCardsForDeck(@PathParam("id") Long id) throws Exception {
+	public DeckCardsModel getCardsForDeck(@PathParam("id") Long id) throws Exception {
 		final Deck deck = deckService.getDeckById(id);
-		return new DeckCardsResourceBuilder(urlFactory, deck).build();
+		return new DeckCardsModelBuilder(urlFactory, deck).build();
 	}
 	
 	@POST

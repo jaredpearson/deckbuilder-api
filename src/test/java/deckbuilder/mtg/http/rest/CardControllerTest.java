@@ -40,7 +40,7 @@ public class CardControllerTest {
 		CardController controller = new CardController();
 		controller.cardService = cardService;
 		
-		CardResource actualCard = controller.getCardById(card.getId());
+		CardModel actualCard = controller.getCardById(card.getId());
 		
 		Assert.assertNotNull("Expected getCardById to not return null", actualCard);
 		Assert.assertEquals("Expected the card resource to include the name of the card", card.getName(), actualCard.getName());

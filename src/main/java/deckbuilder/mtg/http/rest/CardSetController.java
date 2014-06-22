@@ -31,28 +31,28 @@ public class CardSetController {
 	
 	@GET
 	@Path("/{id}")
-	public CardSetResource getCardSetById(@PathParam("id") Long id) throws Exception {
+	public CardSetModel getCardSetById(@PathParam("id") Long id) throws Exception {
 		final CardSet set = cardSetService.getCardSetById(id);
-		return new CardSetResourceBuilder(urlFactory, set).build();
+		return new CardSetModelBuilder(urlFactory, set).build();
 	}
 	
 	@GET
 	@Path("/{id}/cards")
-	public CardSetCardsResource getCardsForSet(@PathParam("id") Long id) throws Exception {
+	public CardSetCardsModel getCardsForSet(@PathParam("id") Long id) throws Exception {
 		final CardSet set = cardSetService.getCardSetById(id);
-		return new CardSetCardsResourceBuilder(urlFactory, set).build();
+		return new CardSetCardsModelBuilder(urlFactory, set).build();
 	}
 	
 	@GET
-	public CardSetListResource list() throws Exception {
+	public CardSetListModel list() throws Exception {
 		final List<CardSet> sets = cardSetService.getCardSets();
-		final List<CardSetResource> resources = Lists.newArrayListWithExpectedSize(sets.size());
+		final List<CardSetModel> resources = Lists.newArrayListWithExpectedSize(sets.size());
 		for (CardSet cardSet : sets) {
-			final CardSetResource resource = new CardSetResourceBuilder(urlFactory, cardSet).build();
+			final CardSetModel resource = new CardSetModelBuilder(urlFactory, cardSet).build();
 			assert resource != null;
 			resources.add(resource);
 		}
-		return new CardSetListResource(resources);
+		return new CardSetListModel(resources);
 	}
 	
 	@POST

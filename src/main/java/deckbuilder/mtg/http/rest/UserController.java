@@ -23,8 +23,8 @@ public class UserController {
 	
 	@GET
 	@Path("/{id}")
-	public UserResource getUserById(@PathParam("id") Long id) {
+	public UserModel getUserById(@PathParam("id") Long id) {
 		final User user = userService.getUserById(id);
-		return new UserResourceBuilder(urlFactory, user).build();
+		return new UserModelBuilder(urlFactory, user).build();
 	}
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
-public class DeckResource implements Serializable {
+public class DeckModel implements Serializable {
 	private static final long serialVersionUID = -257383003130744950L;
 	private final String url;
 	private final long id;
@@ -12,7 +12,7 @@ public class DeckResource implements Serializable {
 	private final String cardsUrl;
 	private final String ownerUrl;
 	
-	public DeckResource(
+	public DeckModel(
 			@Nonnull String url, 
 			long id, 
 			@Nonnull String name, 

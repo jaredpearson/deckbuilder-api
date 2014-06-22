@@ -38,7 +38,7 @@ public class DeckControllerTest {
 		
 		DeckController controller = new DeckController();
 		controller.deckService = deckService;
-		List<DeckResource> decks = controller.list(securityContext);
+		List<DeckModel> decks = controller.list(securityContext);
 		
 		Assert.assertEquals("Expected list to return all available decks", 1, decks.size());
 		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), decks.get(0).getId());
@@ -57,7 +57,7 @@ public class DeckControllerTest {
 		
 		DeckController controller = new DeckController();
 		controller.deckService = deckService;
-		DeckResource actualDeck = controller.getDeckById(deck.getId());
+		DeckModel actualDeck = controller.getDeckById(deck.getId());
 		
 		Assert.assertNotNull("Expected getDeckById to return the deck", deck);
 		Assert.assertEquals("Expected the resource returned to be the one in returned by the service.", deck.getId().longValue(), actualDeck.getId());

@@ -11,14 +11,14 @@ import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
 
 /**
- * Builder for {@link CardSetCardsResource} instances
+ * Builder for {@link CardSetCardsModel} instances
  * @author jared.pearson
  */
-public class CardSetCardsResourceBuilder implements Builder<CardSetCardsResource> {
+public class CardSetCardsModelBuilder implements Builder<CardSetCardsModel> {
 	private final EntityUrlFactory urlFactory;
 	private final CardSet cardSet;
 	
-	public CardSetCardsResourceBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull CardSet cardSet) {
+	public CardSetCardsModelBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull CardSet cardSet) {
 		assert urlFactory != null;
 		assert cardSet != null;
 		this.urlFactory = urlFactory;
@@ -26,13 +26,13 @@ public class CardSetCardsResourceBuilder implements Builder<CardSetCardsResource
 	}
 
 	@Override
-	public CardSetCardsResource build() {
+	public CardSetCardsModel build() {
 		final List<Card> cards = cardSet.getCards();
-		final ArrayList<CardResource> resources = Lists.newArrayListWithExpectedSize(cards.size());
+		final ArrayList<CardModel> resources = Lists.newArrayListWithExpectedSize(cards.size());
 		for(Card card : cards) {
-			final CardResourceBuilder resourceBuilder = new CardResourceBuilder(urlFactory, card);
+			final CardModelBuilder resourceBuilder = new CardModelBuilder(urlFactory, card);
 			resources.add(resourceBuilder.build());
 		}
-		return new CardSetCardsResource(resources);
+		return new CardSetCardsModel(resources);
 	}
 }

@@ -36,9 +36,9 @@ public class CardController {
 	
 	@GET
 	@Path("/{id}")
-	public CardResource getCardById(@PathParam("id") long id) throws Exception {
+	public CardModel getCardById(@PathParam("id") long id) throws Exception {
 		final Card card = cardService.getCardById(id);
-		return new CardResourceBuilder(urlFactory, card).build();
+		return new CardModelBuilder(urlFactory, card).build();
 	}
 	
 	@POST

@@ -10,15 +10,15 @@ import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 
 /**
- * Builder for creating instances of {@link DeckCardsResource}.
+ * Builder for creating instances of {@link DeckCardsModel}.
  * @author jared.pearson
  *
  */
-public class DeckCardsResourceBuilder implements Builder<DeckCardsResource> {
+public class DeckCardsModelBuilder implements Builder<DeckCardsModel> {
 	private final EntityUrlFactory urlFactory;
 	private final Deck deck;
 	
-	public DeckCardsResourceBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull Deck deck) {
+	public DeckCardsModelBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull Deck deck) {
 		assert urlFactory != null;
 		assert deck != null;
 		this.urlFactory = urlFactory;
@@ -26,16 +26,16 @@ public class DeckCardsResourceBuilder implements Builder<DeckCardsResource> {
 	}
 	
 	@Override
-	public DeckCardsResource build() {
+	public DeckCardsModel build() {
 		final String url = urlFactory.createEntityUrl(Deck.class, deck.getId()) + "/cards";
 		
-		final ArrayList<DeckCardResource> cards = Lists.newArrayListWithExpectedSize(deck.getCards().size());
+		final ArrayList<DeckCardModel> cards = Lists.newArrayListWithExpectedSize(deck.getCards().size());
 		for (DeckCard deckCard : deck.getCards()) {
-			final DeckCardResource deckCardResource = new DeckCardResourceBuilder(urlFactory, deckCard).build();
+			final DeckCardModel deckCardResource = new DeckCardModelBuilder(urlFactory, deckCard).build();
 			assert deckCardResource != null;
 			cards.add(deckCardResource);
 		}
 		
-		return new DeckCardsResource(url, cards);
+		return new DeckCardsModel(url, cards);
 	}
 }
