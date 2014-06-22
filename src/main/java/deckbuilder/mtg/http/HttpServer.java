@@ -22,12 +22,16 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import deckbuilder.mtg.facebook.FacebookService;
+import deckbuilder.mtg.http.rest.CardIdResource;
 import deckbuilder.mtg.http.rest.CardResource;
+import deckbuilder.mtg.http.rest.CardSetIdCardsResource;
+import deckbuilder.mtg.http.rest.CardSetIdResource;
 import deckbuilder.mtg.http.rest.CardSetResource;
 import deckbuilder.mtg.http.rest.DeckCardResource;
 import deckbuilder.mtg.http.rest.DeckIdCardsResource;
 import deckbuilder.mtg.http.rest.DeckIdResource;
 import deckbuilder.mtg.http.rest.DeckResource;
+import deckbuilder.mtg.http.rest.UserIdResource;
 import deckbuilder.mtg.http.rest.UserResource;
 
 public class HttpServer {
@@ -95,14 +99,18 @@ public class HttpServer {
 					//setup the basic servlet for getting access tokens from facebook 
 					serve("/facebook/auth").with(FacebookAuthServlet.class);
 					
-					//controllers
+					//resources
 					bind(CardResource.class).in(Singleton.class);
+					bind(CardIdResource.class).in(Singleton.class);
+					bind(CardSetResource.class).in(Singleton.class);
+					bind(CardSetIdResource.class).in(Singleton.class);
+					bind(CardSetIdCardsResource.class).in(Singleton.class);
 					bind(DeckResource.class).in(Singleton.class);
 					bind(DeckIdResource.class).in(Singleton.class);
 					bind(DeckIdCardsResource.class).in(Singleton.class);
 					bind(DeckCardResource.class).in(Singleton.class);
-					bind(CardSetResource.class).in(Singleton.class);
 					bind(UserResource.class).in(Singleton.class);
+					bind(UserIdResource.class).in(Singleton.class);
 					
 					//setup persistence for all resources
 					filter("/*").through(PersistFilter.class);

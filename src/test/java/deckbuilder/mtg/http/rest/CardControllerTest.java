@@ -13,39 +13,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.Card;
-import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.CardResource.CardCreateContext;
 import deckbuilder.mtg.http.rest.CardResource.CardSaveContext;
-import deckbuilder.mtg.http.rest.models.CardModel;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
 
 public class CardControllerTest {
-	
-	@Test
-	public void testGetCardById() throws Exception {
-		CardSet cardSet = new CardSet();
-		cardSet.setName("Set");
-		cardSet.setLanguage("en");
-		cardSet.setAbbreviation("set");
-		
-		Card card = new Card();
-		card.setId(1l);
-		card.setName("Test");
-		card.setSet(cardSet);
-		
-		CardService cardService = mock(CardService.class);
-		when(cardService.getCardById(card.getId())).thenReturn(card);
-		
-		CardResource controller = new CardResource();
-		controller.cardService = cardService;
-		
-		CardModel actualCard = controller.getCardById(card.getId());
-		
-		Assert.assertNotNull("Expected getCardById to not return null", actualCard);
-		Assert.assertEquals("Expected the card resource to include the name of the card", card.getName(), actualCard.getName());
-	}
 	
 	@Test
 	public void testCreateCard() throws Exception {

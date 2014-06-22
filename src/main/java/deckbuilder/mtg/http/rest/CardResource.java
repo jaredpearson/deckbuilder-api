@@ -2,10 +2,8 @@ package deckbuilder.mtg.http.rest;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -17,8 +15,6 @@ import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
-import deckbuilder.mtg.http.rest.models.CardModel;
-import deckbuilder.mtg.http.rest.models.CardModelBuilder;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
 
@@ -35,13 +31,6 @@ public class CardResource {
 	
 	@Inject
 	CardSetService cardSetService;
-	
-	@GET
-	@Path("/{id}")
-	public CardModel getCardById(@PathParam("id") long id) throws Exception {
-		final Card card = cardService.getCardById(id);
-		return new CardModelBuilder(urlFactory, card).build();
-	}
 	
 	@POST
 	@Transactional

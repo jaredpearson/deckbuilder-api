@@ -23,7 +23,7 @@ public class UserModelBuilder implements Builder<UserModel> {
 	
 	@Override
 	public UserModel build() {
-		final String url = urlFactory.createEntityUrl(User.class, user.getId());
+		final String url = urlFactory.createEntityUrl(User.class, user.getId()).build();
 		final long id = user.getId();
 		return new UserModel(url, id);
 	}

@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.DeckIdCardsResource;
 import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
@@ -29,7 +30,7 @@ public class DeckCardsModelBuilder implements Builder<DeckCardsModel> {
 	
 	@Override
 	public DeckCardsModel build() {
-		final String url = urlFactory.createEntityUrl(Deck.class, deck.getId()) + "/cards";
+		final String url = new DeckIdCardsResource.UrlBuilder(deck.getId()).build();
 		
 		final ArrayList<DeckCardModel> cards = Lists.newArrayListWithExpectedSize(deck.getCards().size());
 		for (DeckCard deckCard : deck.getCards()) {

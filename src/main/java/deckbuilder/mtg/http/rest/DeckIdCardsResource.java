@@ -28,4 +28,20 @@ public class DeckIdCardsResource {
 		return new DeckCardsModelBuilder(urlFactory, deck).build();
 	}
 	
+	/**
+	 * Builds URL instances for the {@link DeckIdCardsResource}
+	 * @author jared.pearson
+	 */
+	public static class UrlBuilder extends deckbuilder.mtg.http.rest.UrlBuilder {
+		private final long id;
+		
+		public UrlBuilder(long id) {
+			this.id = id;
+		}
+		
+		@Override
+		public String build() {
+			return "/v1/deck/" + id + "/cards";
+		}
+	}
 }

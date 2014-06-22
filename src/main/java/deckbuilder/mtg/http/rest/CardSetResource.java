@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -18,8 +17,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
-import deckbuilder.mtg.http.rest.models.CardSetCardsModel;
-import deckbuilder.mtg.http.rest.models.CardSetCardsModelBuilder;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
 import deckbuilder.mtg.http.rest.models.CardSetModel;
 import deckbuilder.mtg.http.rest.models.CardSetModelBuilder;
@@ -28,25 +25,12 @@ import deckbuilder.mtg.service.CardSetService;
 @Path("/{version}/set")
 @Produces(MediaType.APPLICATION_JSON)
 public class CardSetResource {
+	
 	@Inject
 	EntityUrlFactory urlFactory;
 	
 	@Inject
 	CardSetService cardSetService;
-	
-	@GET
-	@Path("/{id}")
-	public CardSetModel getCardSetById(@PathParam("id") Long id) throws Exception {
-		final CardSet set = cardSetService.getCardSetById(id);
-		return new CardSetModelBuilder(urlFactory, set).build();
-	}
-	
-	@GET
-	@Path("/{id}/cards")
-	public CardSetCardsModel getCardsForSet(@PathParam("id") Long id) throws Exception {
-		final CardSet set = cardSetService.getCardSetById(id);
-		return new CardSetCardsModelBuilder(urlFactory, set).build();
-	}
 	
 	@GET
 	public CardSetListModel list() throws Exception {

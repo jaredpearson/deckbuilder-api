@@ -19,30 +19,10 @@ import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.CardSetResource.CardSetCreateContext;
 import deckbuilder.mtg.http.rest.CardSetResource.CardSetSaveResponse;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
-import deckbuilder.mtg.http.rest.models.CardSetModel;
 import deckbuilder.mtg.service.CardSetService;
 
 public class CardSetControllerTest {
 	
-	@Test
-	public void testGetById() throws Exception {
-		CardSet cardSet = new CardSet();
-		cardSet.setId(1l);
-		cardSet.setName("Test");
-		cardSet.setAbbreviation("tst");
-		cardSet.setLanguage("en");
-		
-		CardSetService cardSetService = mock(CardSetService.class);
-		when(cardSetService.getCardSetById(cardSet.getId())).thenReturn(cardSet);
-		
-		CardSetResource controller = new CardSetResource();
-		controller.cardSetService = cardSetService;
-		
-		CardSetModel resource = controller.getCardSetById(cardSet.getId());
-		
-		Assert.assertNotNull("Expected the resource returned by getCardSetById to not be null", resource);
-	}
-
 	@Test
 	public void testList() throws Exception {
 		CardSet cardSet1 = new CardSet();

@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.DeckIdCardsResource;
 import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
@@ -23,11 +24,11 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 	}
 	
 	public DeckModel build() {
-		final String url = urlFactory.createEntityUrl(Deck.class, deck.getId());
+		final String url = urlFactory.createEntityUrl(Deck.class, deck.getId()).build();
 		final long id = deck.getId();
 		final String name = deck.getName();
-		final String cardsUrl = url + "/cards";
-		final String ownerUrl = urlFactory.createEntityUrl(User.class, deck.getOwner().getId());
+		final String cardsUrl = new DeckIdCardsResource.UrlBuilder(deck.getId()).build();
+		final String ownerUrl = urlFactory.createEntityUrl(User.class, deck.getOwner().getId()).build();
 		return new DeckModel(url, id, name, cardsUrl, ownerUrl);
 	}
 }

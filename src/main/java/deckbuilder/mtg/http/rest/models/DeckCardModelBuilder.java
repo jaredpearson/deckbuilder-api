@@ -24,11 +24,11 @@ public class DeckCardModelBuilder implements Builder<DeckCardModel> {
 	
 	@Override
 	public DeckCardModel build() {
-		final String url = urlFactory.createEntityUrl(DeckCard.class, deckCard.getId());
+		final String url = urlFactory.createEntityUrl(DeckCard.class, deckCard.getId()).build();
 		final long id = deckCard.getId();
 		final int quantity = (deckCard.getQuantity() == null) ? 1 : deckCard.getQuantity();
-		final String cardUrl = urlFactory.createEntityUrl(Card.class, deckCard.getCard().getId());
-		final String deckUrl = urlFactory.createEntityUrl(Deck.class, deckCard.getDeck().getId());
+		final String cardUrl = urlFactory.createEntityUrl(Card.class, deckCard.getCard().getId()).build();
+		final String deckUrl = urlFactory.createEntityUrl(Deck.class, deckCard.getDeck().getId()).build();
 		return new DeckCardModel(url, id, quantity, cardUrl, deckUrl);
 	}
 }

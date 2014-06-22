@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.http.rest.Builder;
+import deckbuilder.mtg.http.rest.CardSetIdCardsResource;
 import deckbuilder.mtg.http.rest.EntityUrlFactory;
 
 /**
@@ -26,11 +27,11 @@ public class CardSetModelBuilder implements Builder<CardSetModel> {
 	 */
 	@Override
 	public CardSetModel build() {
-		final String url = urlFactory.createEntityUrl(CardSet.class, cardSet.getId());
+		final String url = urlFactory.createEntityUrl(CardSet.class, cardSet.getId()).build();
 		final String name = cardSet.getName();
 		final String abbreviation = cardSet.getAbbreviation();
 		final String language = cardSet.getLanguage();
-		final String cardsUrl = urlFactory.createEntityUrl(CardSet.class, cardSet.getId()) + "/cards";
+		final String cardsUrl = new CardSetIdCardsResource.UrlBuilder(cardSet.getId()).build();
 		return new CardSetModel(url, name, abbreviation, language, cardsUrl);
 	}
 }
