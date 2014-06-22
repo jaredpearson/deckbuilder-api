@@ -17,6 +17,7 @@ import com.google.inject.name.Named;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -31,6 +32,8 @@ import deckbuilder.mtg.http.rest.DeckCardResource;
 import deckbuilder.mtg.http.rest.DeckIdCardsResource;
 import deckbuilder.mtg.http.rest.DeckIdResource;
 import deckbuilder.mtg.http.rest.DeckResource;
+import deckbuilder.mtg.http.rest.JpaNoResultExceptionMapper;
+import deckbuilder.mtg.http.rest.NoResultExceptionMapper;
 import deckbuilder.mtg.http.rest.UserIdResource;
 import deckbuilder.mtg.http.rest.UserResource;
 
@@ -82,22 +85,34 @@ public class HttpServer {
 			
 			//creates a new application injector for servlets with the application
 			//injector as the parent
-			return appInjector.createChildInjector(new JerseyServletModule(){
+			return appInjector.createChildInjector(new ServletModule(){
 				@Override
 				protected void configureServlets() {
-					//exception mappers
-					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
-					
 					//facebook
 					bind(FacebookService.class).in(Singleton.class);
-					
-					//security
-					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
 					bind(SecurityFilter.class).in(Singleton.class);
 					bind(FacebookAuthenticationProvider.class).in(Singleton.class);
 					
 					//setup the basic servlet for getting access tokens from facebook 
 					serve("/facebook/auth").with(FacebookAuthServlet.class);
+
+					//setup persistence for all resources
+					filter("/*").through(PersistFilter.class);
+					
+					//setup to serve all resources from the guice container
+					Map<String, String> params = new HashMap<String, String>();
+					params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
+					bind(GuiceContainer.class);
+					serve("/*").with(GuiceContainer.class, params);
+				}
+			},new JerseyServletModule(){
+				@Override
+				protected void configureServlets() {
+					//exception mappers
+					bind(AuthenticationExceptionMapper.class).in(Singleton.class);
+					bind(JpaNoResultExceptionMapper.class).in(Singleton.class);
+					bind(NoResultExceptionMapper.class).in(Singleton.class);
 					
 					//resources
 					bind(CardResource.class).in(Singleton.class);
@@ -111,16 +126,6 @@ public class HttpServer {
 					bind(DeckCardResource.class).in(Singleton.class);
 					bind(UserResource.class).in(Singleton.class);
 					bind(UserIdResource.class).in(Singleton.class);
-					
-					//setup persistence for all resources
-					filter("/*").through(PersistFilter.class);
-					
-					//setup to serve all resources from the guice container
-					Map<String, String> params = new HashMap<String, String>();
-					params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
-					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
-					bind(GuiceContainer.class);
-					serve("/*").with(GuiceContainer.class, params);
 				}
 				
 				@Provides
