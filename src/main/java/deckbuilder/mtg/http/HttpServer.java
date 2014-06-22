@@ -112,6 +112,7 @@ public class HttpServer {
 					//setup to serve all resources from the guice container
 					Map<String, String> params = new HashMap<String, String>();
 					params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+					params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
 					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
 					bind(GuiceContainer.class);
 					serve("/*").with(GuiceContainer.class, params);
