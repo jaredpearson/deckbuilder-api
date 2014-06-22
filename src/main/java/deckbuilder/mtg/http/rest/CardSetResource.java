@@ -33,6 +33,7 @@ public class CardSetResource {
 	CardSetService cardSetService;
 	
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public CardSetListModel list() throws Exception {
 		final List<CardSet> sets = cardSetService.getCardSets();
 		final List<CardSetModel> resources = Lists.newArrayListWithExpectedSize(sets.size());
@@ -45,6 +46,7 @@ public class CardSetResource {
 	}
 	
 	@POST
+	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	public Response createCardSet(CardSetCreateContext cardSetData, @Context SecurityContext securityContext) throws Exception {
 		

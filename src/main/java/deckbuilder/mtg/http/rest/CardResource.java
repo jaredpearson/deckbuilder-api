@@ -33,6 +33,7 @@ public class CardResource {
 	CardSetService cardSetService;
 	
 	@POST
+	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	public Response createCard(CardCreateContext cardData, @Context SecurityContext securityContext) throws Exception {
 		//only administrators can create cards

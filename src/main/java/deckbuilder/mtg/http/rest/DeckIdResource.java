@@ -22,7 +22,6 @@ public class DeckIdResource {
 	DeckService deckService;
 
 	@GET
-	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeckModel getDeckById(@PathParam("id") Long id) throws Exception {
 		final Deck deck = deckService.getDeckById(id);

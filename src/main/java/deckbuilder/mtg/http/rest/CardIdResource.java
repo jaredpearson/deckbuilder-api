@@ -4,6 +4,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.http.rest.models.CardModel;
@@ -20,6 +22,7 @@ public class CardIdResource {
 	CardService cardService;
 	
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public CardModel getCardById(@PathParam("id") long id) throws Exception {
 		final Card card = cardService.getCardById(id);
 		return new CardModelBuilder(urlFactory, card).build();
