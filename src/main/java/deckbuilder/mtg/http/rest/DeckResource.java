@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -82,41 +80,6 @@ public class DeckResource {
 		
 		deck = deckService.createDeck(deck);
 		return Response.ok(new DeckSaveResponse(deck.getId())).build();
-	}
-	
-	@POST
-	@Path("/{id}")
-	@Transactional
-	public Response updateDeck(@PathParam("id") Long id, Deck deck, @Context SecurityContext securityContext) throws Exception {
-		final Deck loadedDeck = deckService.getDeckById(id);
-		
-		//only the owner can update the deck
-		Principal principal = (Principal)securityContext.getUserPrincipal();
-		if(!securityContext.isUserInRole("administrator") && !loadedDeck.getOwner().equals(principal.getUser())) {
-			return Response.status(Status.FORBIDDEN).entity(new SaveResponse(false, new String[]{"Invalid owner. Only the owner can update the deck."})).build();
-		}
-		
-		deck.setId(id);
-		deckService.updateDeck(deck);
-		return Response.ok().build();
-	}
-	
-	@DELETE
-	@Path("/{id}")
-	@Transactional
-	public Response deleteDeck(@PathParam("id") Long id, @Context SecurityContext securityContext) throws Exception {
-		final Deck deck = deckService.getDeckById(id);
-		if(deck != null) {
-			//only the owner can update the deck
-			Principal principal = (Principal)securityContext.getUserPrincipal();
-			if(!securityContext.isUserInRole("administrator") && !deck.getOwner().equals(principal.getUser())) {
-				return Response.status(Status.FORBIDDEN).entity(new SaveResponse(false, new String[]{"Invalid owner. Only the owner can delete a deck."})).build();
-			}
-			
-			deckService.deleteDeck(deck.getId());
-		}
-		
-		return Response.ok().build();
 	}
 	
 	public static class DeckCreateContext {
