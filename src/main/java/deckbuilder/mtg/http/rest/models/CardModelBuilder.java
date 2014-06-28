@@ -6,14 +6,24 @@ import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.http.rest.Builder;
 import deckbuilder.mtg.http.rest.EntityUrlFactory;
+import deckbuilder.mtg.http.rest.UrlBuilder;
 
 /**
  * Builder for card resource instances
  * @author jared.pearson
  */
 public class CardModelBuilder implements Builder<CardModel> {
-	private final EntityUrlFactory urlFactory;
-	private final Card card;
+	private final UrlBuilder url;
+	private final long id;
+	private final String name;
+	private final String castingCost;
+	private final String powerToughness;
+	private final String typeLine;
+	private final String rarity;
+	private final String text;
+	private final String setIndex;
+	private final String author;
+	private final UrlBuilder cardSetUrl;
 	
 	/**
 	 * Creates a new {@link CardModel} using the specified {@link Card} entity.
@@ -21,8 +31,18 @@ public class CardModelBuilder implements Builder<CardModel> {
 	public CardModelBuilder(@Nonnull EntityUrlFactory urlFactory, @Nonnull Card card) {
 		assert urlFactory != null;
 		assert card != null;
-		this.urlFactory = urlFactory;
-		this.card = card;
+
+		this.url = urlFactory.createEntityUrl(Card.class, card.getId());
+		this.id = card.getId();
+		this.name = card.getName();
+		this.castingCost = card.getCastingCost();
+		this.powerToughness = card.getPowerToughness();
+		this.typeLine = card.getTypeLine();
+		this.rarity = card.getRarity();
+		this.text = card.getText();
+		this.setIndex = card.getSetIndex();
+		this.author = card.getAuthor();
+		this.cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId());
 	}
 	
 	/**
@@ -30,17 +50,19 @@ public class CardModelBuilder implements Builder<CardModel> {
 	 */
 	@Override
 	public @Nonnull CardModel build(BuildContext context) {
-		final String url = urlFactory.createEntityUrl(Card.class, card.getId()).build(context);
-		final String name = card.getName();
-		final String castingCost = card.getCastingCost();
-		final String powerToughness = card.getPowerToughness();
-		final String typeLine = card.getTypeLine();
-		final String rarity = card.getRarity();
-		final String text = card.getText();
-		final String setIndex = card.getSetIndex();
-		final String author = card.getAuthor();
-		final String cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId()).build(context);
-		final CardModel resource = new CardModel(url, name, castingCost, powerToughness, typeLine, rarity, text, setIndex, author, cardSetUrl);
-		return resource;
+		final String url = this.url.build(context);
+		final String cardSetUrl = this.cardSetUrl.build(context);
+		return new CardModel(
+				id, 
+				url, 
+				name, 
+				castingCost, 
+				powerToughness, 
+				typeLine, 
+				rarity, 
+				text, 
+				setIndex, 
+				author, 
+				cardSetUrl);
 	}
 }

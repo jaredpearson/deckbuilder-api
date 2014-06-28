@@ -11,6 +11,7 @@ import deckbuilder.mtg.entities.Card;
 public class CardModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private final long id;
 	private final String url;
 	private final String name;
 	private final String castingCost;
@@ -23,6 +24,7 @@ public class CardModel implements Serializable {
 	private final String cardSetUrl;
 	
 	public CardModel(
+			final long id,
 			final String url,
 			final String name,
 			final String castingCost,
@@ -33,6 +35,7 @@ public class CardModel implements Serializable {
 			final String setIndex,
 			final String author, 
 			final String cardSetUrl) {
+		this.id = id;
 		this.url = url;
 		this.name = name;
 		this.castingCost = castingCost;
@@ -50,6 +53,10 @@ public class CardModel implements Serializable {
 	 */
 	public String getUrl() {
 		return url;
+	}
+	
+	public long getId() {
+		return id;
 	}
 	
 	public String getName() {
