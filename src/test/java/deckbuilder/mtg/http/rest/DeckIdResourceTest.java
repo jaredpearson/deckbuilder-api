@@ -31,6 +31,7 @@ public class DeckIdResourceTest {
 		Deck deck = new Deck();
 		deck.setId(1l);
 		deck.setOwner(user);
+		deck.setName("Test");
 		
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDeckById(deck.getId())).thenReturn(deck);
@@ -73,9 +74,11 @@ public class DeckIdResourceTest {
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
-		resource.updateDeck(deck.getId(), deck, securityContext);
+		Response response = resource.updateDeck(deck.getId(), deck, securityContext);
 		
 		verify(deckService).updateDeck(any(Deck.class));
+		Assert.assertNotNull("Expected the response to not be null", response);
+		Assert.assertEquals("Expected the response to be 200 OK", 200, response.getStatus());
 	}
 	
 	@Test()
@@ -117,9 +120,12 @@ public class DeckIdResourceTest {
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
-		resource.deleteDeck(deck.getId(), securityContext);
+		Response response = resource.deleteDeck(deck.getId(), securityContext);
 		
 		verify(deckService).deleteDeck(deck.getId());
+		Assert.assertNotNull("Expected the response to not be null", response);
+		Assert.assertEquals("Expected the response to be 200 OK", 200, response.getStatus());
+		Assert.assertNull("Expected the response entity to be null", response.getEntity());
 	}
 	
 	@Test
