@@ -156,7 +156,7 @@ public class Main {
 				@Override
 				protected void configure() {
 					bind(DatabaseCredentials.class).toInstance(dbCreds);
-					bind(DataSource.class).toProvider(HsqldbDataSourceProvider.class).in(Singleton.class);
+					bind(DataSource.class).toProvider(DataSourceProvider.class).in(Singleton.class);
 					bind(DatabaseService.class).in(Singleton.class);
 				}
 			}, 
@@ -235,7 +235,12 @@ public class Main {
 			});
 	}
 	
-	private static class HsqldbDataSourceProvider implements Provider<DataSource> {
+	/**
+	 * Creates instances of {@link DataSource} using the {@link DatabaseCredentials}
+	 * within the container.
+	 * @author jared.pearson
+	 */
+	private static class DataSourceProvider implements Provider<DataSource> {
 		@Inject
 		DatabaseCredentials credentials;
 		
