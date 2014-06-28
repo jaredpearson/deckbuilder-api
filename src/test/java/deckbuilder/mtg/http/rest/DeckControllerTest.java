@@ -34,6 +34,7 @@ public class DeckControllerTest {
 		Deck deck = new Deck();
 		deck.setId(1l);
 		deck.setOwner(user);
+		deck.setName("Test");
 		
 		DeckService deckService = mock(DeckService.class);
 		when(deckService.getDecksForOwner(user.getId())).thenReturn(Arrays.asList(deck));
