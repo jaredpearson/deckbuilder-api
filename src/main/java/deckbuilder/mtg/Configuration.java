@@ -24,10 +24,6 @@ public class Configuration {
 		this.cors = cors;
 	}
 	
-	public @Nonnull CorsConfiguration getCors() {
-		return cors;
-	}
-	
 	/**
 	 * Contains the configuration information for CORS 
 	 * @author jared.pearson

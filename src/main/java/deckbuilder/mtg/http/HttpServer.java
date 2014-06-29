@@ -125,7 +125,7 @@ public class HttpServer {
 				private Map<String, String> createCrossOriginFilterInitParams() {
 					final Configuration config = appInjector.getInstance(Configuration.class);
 					final Map<String, String> crossOriginFilterInitParams = Maps.newHashMap();
-					crossOriginFilterInitParams.put("allowedOrigins", config.getCors().allowedOrigins);
+					crossOriginFilterInitParams.put("allowedOrigins", config.cors.allowedOrigins);
 					crossOriginFilterInitParams.put("allowedMethods", "GET,POST,HEAD,PATCH,DELETE,OPTIONS");
 					crossOriginFilterInitParams.put("allowedHeaders", "Authorization,authorization");
 					return crossOriginFilterInitParams;
