@@ -14,6 +14,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.persist.Transactional;
 
@@ -54,21 +55,46 @@ public class CardSetResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public Response createCardSet(CardSetCreateContext cardSetData, @Context SecurityContext securityContext) throws Exception {
+	public Response createCardSet(CardSetCreateModel cardSetData, @Context SecurityContext securityContext) throws Exception {
 		
 		//only administrators can create card sets
 		if(!securityContext.isUserInRole("administrator")) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
 		
+		// validate the properties
+		validateText("name", cardSetData.getName(), false, 30);
+		validateText("abbreviation", cardSetData.getAbbreviation(), false, 5);
+		validateText("language", cardSetData.getLanguage(), false, 2);
+		
 		CardSet cardSet = new CardSet();
-		cardSet.setName(cardSetData.getName());
+		cardSet.setName(Strings.nullToEmpty(cardSetData.getName()).trim());
+		cardSet.setAbbreviation(Strings.nullToEmpty(cardSetData.getAbbreviation()).trim());
+		cardSet.setLanguage(Strings.nullToEmpty(cardSetData.getLanguage()).trim().toLowerCase());
 		
 		cardSet = cardSetService.createCardSet(cardSet);
 		
 		return Response.ok(new CardSetSaveResponse(cardSet.getId())).build();
 	}
 	
+	private void validateText(String name, String value, boolean nullAllowed, int maxLength) {
+		if (nullAllowed && value == null) {
+			return;
+		}
+		
+		final String cleanValue = Strings.nullToEmpty(value).trim();
+		if (cleanValue.isEmpty()) {
+			throw new IllegalArgumentException("Expected " + name + " to be specified");
+		}
+		if (cleanValue.length() > maxLength) {
+			throw new IllegalArgumentException(name + " must be less than 5 characters");
+		}
+	}
+	
+	/**
+	 * Response for when a {@link CardSet} is created
+	 * @author jared.pearson
+	 */
 	public static class CardSetSaveResponse {
 		private Long id;
 		
@@ -81,14 +107,37 @@ public class CardSetResource {
 		}
 	}
 	
-	public static class CardSetCreateContext {
+	/**
+	 * Model used to create {@link CardSet} instances
+	 * @author jared.pearson
+	 */
+	public static class CardSetCreateModel {
 		private String name;
+		private String abbreviation;
+		private String language;
 		
 		public String getName() {
 			return name;
 		}
+		
 		public void setName(String name) {
 			this.name = name;
+		}
+		
+		public void setLanguage(String language) {
+			this.language = language;
+		}
+		
+		public String getLanguage() {
+			return language;
+		}
+		
+		public String getAbbreviation() {
+			return abbreviation;
+		}
+		
+		public void setAbbreviation(String abbreviation) {
+			this.abbreviation = abbreviation;
 		}
 	}
 }

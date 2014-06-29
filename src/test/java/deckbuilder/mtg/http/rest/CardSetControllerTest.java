@@ -19,7 +19,7 @@ import org.mockito.stubbing.Answer;
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
-import deckbuilder.mtg.http.rest.CardSetResource.CardSetCreateContext;
+import deckbuilder.mtg.http.rest.CardSetResource.CardSetCreateModel;
 import deckbuilder.mtg.http.rest.CardSetResource.CardSetSaveResponse;
 import deckbuilder.mtg.http.rest.models.CardSetListModel;
 import deckbuilder.mtg.service.CardSetService;
@@ -79,7 +79,10 @@ public class CardSetControllerTest {
 			}
 		});
 		
-		CardSetCreateContext cardSetData = new CardSetCreateContext();
+		CardSetCreateModel cardSetData = new CardSetCreateModel();
+		cardSetData.setName("Test");
+		cardSetData.setAbbreviation("tst");
+		cardSetData.setLanguage("en");
 		
 		CardSetResource controller = new CardSetResource();
 		controller.cardSetService = cardSetService;

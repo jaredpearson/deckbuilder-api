@@ -27,11 +27,12 @@ public class CardSetModelBuilder implements Builder<CardSetModel> {
 	 */
 	@Override
 	public CardSetModel build(BuildContext context) {
-		final String url = urlFactory.createEntityUrl(CardSet.class, cardSet.getId()).build(context);
+		final Long id = cardSet.getId();
+		final String url = urlFactory.createEntityUrl(CardSet.class, id).build(context);
 		final String name = cardSet.getName();
 		final String abbreviation = cardSet.getAbbreviation();
 		final String language = cardSet.getLanguage();
-		final String cardsUrl = new CardSetIdCardsResource.UrlBuilder(cardSet.getId()).build(context);
-		return new CardSetModel(url, name, abbreviation, language, cardsUrl);
+		final String cardsUrl = new CardSetIdCardsResource.UrlBuilder(id).build(context);
+		return new CardSetModel(id, url, name, abbreviation, language, cardsUrl);
 	}
 }
