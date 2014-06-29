@@ -2,6 +2,7 @@ package deckbuilder.mtg.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class Card {
 	
 	@Id
-	@GeneratedValue(generator="increment")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@GenericGenerator(name="increment", strategy="increment")
 	private Long id;
 	
