@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -57,7 +59,9 @@ public class DeckResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<DeckModel> list(@Context SecurityContext securityContext, @Context UriInfo uriInfo) throws Exception {
+	public @Nonnull List<DeckModel> list(@Context SecurityContext securityContext, @Context UriInfo uriInfo) throws Exception {
+		assert securityContext != null;
+		assert uriInfo != null;
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
 		final BuildContext context = buildContextFactory.create(uriInfo);
 		final List<Deck> decks = deckService.getDecksForOwner(principal.getUser().getId());
@@ -73,12 +77,14 @@ public class DeckResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public Response createDeck(DeckCreateModel deckData, @Context SecurityContext securityContext) throws Exception {
+	public @Nonnull Response createDeck(DeckCreateModel deckData, @Context SecurityContext securityContext) throws Exception {
+		assert deckData != null;
+		assert securityContext != null;
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
 		
 		// only let the administrator change the owner of a deck
 		if(!securityContext.isUserInRole("administrator") && deckData.getOwner() != principal.getUser().getId()) {
-			return Response.status(Status.FORBIDDEN).entity(new SaveResponse(false, new String[]{"Invalid owner. Only the current user can be specified as the owner."})).build();
+			return Response.status(Status.FORBIDDEN).entity(SaveResponse.fail("Invalid owner. Only the current user can be specified as the owner.")).build();
 		}
 		
 		final Deck deck = new Deck();
@@ -105,7 +111,7 @@ public class DeckResource {
 				}
 				
 				if (deckCardData.getCardId() == null) {
-					return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Card specified without card ID"})).build();
+					return Response.status(Status.BAD_REQUEST).entity(SaveResponse.fail("Card specified without card ID")).build();
 				}
 				cardIds.add(deckCardData.getCardId());
 			}
@@ -122,7 +128,7 @@ public class DeckResource {
 			for (DeckCardCreateModel deckCardData : deckData.getCards()) {
 				final Card card = cardIdToCard.get(deckCardData.getCardId());
 				if (card == null) {
-					return Response.status(Status.BAD_REQUEST).entity(new SaveResponse(false, new String[]{"Unknown card ID specified: " + deckCardData.getCardId()})).build();
+					return Response.status(Status.BAD_REQUEST).entity(SaveResponse.fail("Unknown card ID specified: " + deckCardData.getCardId())).build();
 				}
 				
 				final DeckCard deckCard = new DeckCard();
@@ -138,75 +144,107 @@ public class DeckResource {
 		return Response.ok(new DeckSaveResponse(savedDeck.getId())).build();
 	}
 	
+	/**
+	 * Input model for when a user wants to create a new {@link Deck}
+	 * @author jared.pearson
+	 */
 	public static class DeckCreateModel {
 		private String name;
 		private Long owner;
 		private List<DeckCardCreateModel> cards = Lists.newArrayList();
 		
-		public String getName() {
+		public @Nullable String getName() {
 			return name;
 		}
 		
-		public void setName(String name) {
+		public void setName(@Nullable String name) {
 			this.name = name;
 		}
 		
-		public Long getOwner() {
+		public @Nullable Long getOwner() {
 			return owner;
 		}
 		
-		public void setOwner(Long owner) {
+		public void setOwner(@Nullable Long owner) {
 			this.owner = owner;
 		}
 		
-		public void setCards(List<DeckCardCreateModel> cards) {
+		public void setCards(@Nullable List<DeckCardCreateModel> cards) {
 			this.cards = cards;
 		}
 		
-		public List<DeckCardCreateModel> getCards() {
+		public @Nullable List<DeckCardCreateModel> getCards() {
 			return cards;
 		}
 	}
 	
+	/**
+	 * Input model for when a user wants to create a new {@link DeckCard}
+	 * @author jared.pearson
+	 */
 	public static class DeckCardCreateModel {
 		private Integer quantity = 1;
 		private Long cardId;
 		
-		public Long getCardId() {
+		public @Nullable Long getCardId() {
 			return cardId;
 		}
 		
-		public void setCardId(Long cardId) {
+		public void setCardId(@Nullable Long cardId) {
 			this.cardId = cardId;
 		}
 		
-		public void setQuantity(Integer quantity) {
+		public void setQuantity(@Nullable Integer quantity) {
 			this.quantity = quantity;
 		}
 		
-		public Integer getQuantity() {
+		public @Nullable Integer getQuantity() {
 			return quantity;
 		}
 	}
 	
+	/**
+	 * Response for a save operation
+	 * @author jared.pearson
+	 */
 	public static class SaveResponse {
-		private String[] messages;
-		private Boolean success;
+		private final String[] messages;
+		private final Boolean success;
 		
 		public SaveResponse(Boolean success, String[] messages) {
 			this.success = success;
 			this.messages = messages;
 		}
 		
-		public String[] getMessages() {
+		/**
+		 * Gets any messages that were caused by the save operation or null if none
+		 * were added. If the success was false, there should be at least one message.
+		 */
+		public @Nullable String[] getMessages() {
 			return messages;
 		}
 		
+		/**
+		 * Gets the success status of the save
+		 */
 		public Boolean getSuccess() {
 			return success;
 		}
+		
+		/**
+		 * Creates a new save response that represents a fail.
+		 */
+		public static @Nonnull SaveResponse fail(@Nonnull String... messages) {
+			assert messages != null;
+			assert messages.length > 0;
+			return new SaveResponse(false, messages);
+		}
 	}
 	
+	/**
+	 * Response for when a new Deck is saved 
+	 * @author jared.pearson
+	 */
 	public static class DeckSaveResponse extends SaveResponse {
 		private Long id;
 		
@@ -215,6 +253,9 @@ public class DeckResource {
 			this.id = id;
 		}
 		
+		/**
+		 * Gets the ID of the new deck
+		 */
 		public Long getId() {
 			return id;
 		}
