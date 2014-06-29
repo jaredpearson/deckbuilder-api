@@ -35,8 +35,15 @@ public class DefaultCardServiceTest extends JpaPersistenceTest {
 	
 	@Test
 	public void testCreateCard() throws Exception {
+		CardSet cardSet = new CardSet();
+		cardSet.setName("Set");
+		cardSet.setLanguage("en");
+		cardSet.setAbbreviation("set");
+		entityManager.persist(cardSet);
+		
 		Card card = new Card();
 		card.setName("Test");
+		card.setSet(cardSet);
 		
 		DefaultCardService service = new DefaultCardService();
 		service.entityManagerProvider = entityManagerProvider;
