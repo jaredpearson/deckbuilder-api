@@ -22,7 +22,7 @@ public class CardModelBuilder implements Builder<CardModel> {
 	private final String rarity;
 	private final String text;
 	private final String setIndex;
-	private final String author;
+	private final String artist;
 	private final UrlBuilder cardSetUrl;
 	
 	/**
@@ -41,7 +41,7 @@ public class CardModelBuilder implements Builder<CardModel> {
 		this.rarity = card.getRarity();
 		this.text = card.getText();
 		this.setIndex = card.getSetIndex();
-		this.author = card.getAuthor();
+		this.artist = card.getArtist();
 		this.cardSetUrl = urlFactory.createEntityUrl(CardSet.class, card.getSet().getId());
 	}
 	
@@ -62,7 +62,7 @@ public class CardModelBuilder implements Builder<CardModel> {
 				rarity, 
 				text, 
 				setIndex, 
-				author, 
+				artist, 
 				cardSetUrl);
 	}
 }

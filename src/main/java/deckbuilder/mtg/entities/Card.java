@@ -112,11 +112,11 @@ public class Card {
 		this.rarity = rarity;
 	}
 
-	public String getAuthor() {
+	public String getArtist() {
 		return artist;
 	}
 
-	public void setAuthor(String author) {
-		this.artist = author;
+	public void setArtist(String artist) {
+		this.artist = artist;
 	}
 }
