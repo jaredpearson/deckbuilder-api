@@ -4,31 +4,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
+import org.flywaydb.core.Flyway;
 
 import com.google.common.base.Strings;
-import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
 public class DatabaseService {
-	private static final Logger logger = Logger.getLogger(DatabaseService.class.getName());
 	private static final String PATH_PREFIX_JAR = "jar:";
 	private static final String FILE_PREFIX_JAR = "file:";
-	private DataSource dataSource;
+	private final DataSource dataSource;
 	
 	@Inject
 	public DatabaseService(DataSource dataSource) {
@@ -39,36 +35,10 @@ public class DatabaseService {
 	 * Initializes the database with the schema.
 	 */
 	public void initializeSchema() throws SQLException, IOException {
-		//list of ddl scripts to be executed in order
-		String ddlDir = "/deckbuilder/mtg/db/";
-		String[] ddlScripts = new String[]{
-			"users.sql",
-			"sets.sql",
-			"cards.sql",
-			"decks.sql",
-			"deckcards.sql"
-		};
-		ScriptParser scriptParser = new ScriptParser();
-		try(Connection cnn = dataSource.getConnection()) {
-			try(Statement stmt = cnn.createStatement()) {
-				for(String ddlScript : ddlScripts) {
-					logger.fine("Executing " + ddlScript);
-					String fullScriptPath = ddlDir + ddlScript;
-					try(InputStream inputStream = DatabaseService.class.getResourceAsStream(fullScriptPath)) {
-						if(inputStream == null) {
-							throw new RuntimeException("Unable to find DDL script at path: " + fullScriptPath);
-						}
-						
-						try(InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
-							String script = CharStreams.toString(inputStreamReader);
-							for(String statement : scriptParser.parseScript(script)) {
-								stmt.execute(statement);
-							}
-						}
-					}
-				}
-			}
-		}
+		final Flyway flyway = new Flyway();
+		flyway.setDataSource(dataSource);
+		flyway.setLocations("classpath:deckbuilder.mtg.db");
+		flyway.migrate();
 	}
 	
 	/**
