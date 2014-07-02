@@ -11,7 +11,7 @@ import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.DeckCardResource.DeckCardCreateContext;
+import deckbuilder.mtg.http.rest.DeckCardResource.DeckCardCreateModel;
 import deckbuilder.mtg.http.rest.DeckCardResource.DeckCardSaveContext;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.DeckCardService;
@@ -44,7 +44,7 @@ public class DeckCardControllerTest {
 			}
 		});
 		
-		DeckCardCreateContext deckCardData = new DeckCardCreateContext();
+		DeckCardCreateModel deckCardData = new DeckCardCreateModel();
 		deckCardData.setCard(1l);
 		deckCardData.setDeck(1l);
 		deckCardData.setQuantity(1);

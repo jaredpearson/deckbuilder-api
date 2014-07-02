@@ -14,7 +14,7 @@ import org.mockito.stubbing.Answer;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.User;
-import deckbuilder.mtg.http.rest.CardResource.CardCreateContext;
+import deckbuilder.mtg.http.rest.CardResource.CardCreateModel;
 import deckbuilder.mtg.http.rest.CardResource.CardSaveContext;
 import deckbuilder.mtg.service.CardService;
 import deckbuilder.mtg.service.CardSetService;
@@ -42,7 +42,7 @@ public class CardControllerTest {
 		controller.cardService = cardService;
 		controller.cardSetService = cardSetService;
 		
-		CardCreateContext cardData = new CardCreateContext();
+		CardCreateModel cardData = new CardCreateModel();
 		cardData.setName("test");
 		
 		Response response = controller.createCard(cardData, securityContext);

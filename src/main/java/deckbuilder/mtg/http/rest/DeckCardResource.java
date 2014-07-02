@@ -30,7 +30,7 @@ public class DeckCardResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public DeckCardSaveContext createDeckCard(DeckCardCreateContext deckCardData) throws Exception {
+	public DeckCardSaveContext createDeckCard(DeckCardCreateModel deckCardData) throws Exception {
 		DeckCard deckCard = new DeckCard();
 		
 		Card card = cardService.getCardById(deckCardData.getCard());
@@ -48,7 +48,7 @@ public class DeckCardResource {
 	}
 	
 	public static class DeckCardSaveContext {
-		private Long id;
+		private final Long id;
 		
 		public DeckCardSaveContext(Long id) {
 			this.id = id;
@@ -63,13 +63,13 @@ public class DeckCardResource {
 	 * Data transfer object where the references are simple properties to ID values 
 	 * @author jared.pearson
 	 */
-	public static class DeckCardCreateContext {
+	public static class DeckCardCreateModel {
 		private Long id;
 		private Long card;
 		private Long deck;
 		private Integer quantity;
 		
-		public DeckCardCreateContext() {
+		public DeckCardCreateModel() {
 		}
 		
 		public Long getId() {
@@ -102,6 +102,17 @@ public class DeckCardResource {
 		
 		public void setQuantity(Integer quantity) {
 			this.quantity = quantity;
+		}
+	}
+	
+	/**
+	 * Builds URL instances for the {@link DeckCardResource}
+	 * @author jared.pearson
+	 */
+	public static class UrlBuilder extends deckbuilder.mtg.http.rest.UrlBuilder {
+		@Override
+		protected String buildPath(BuildContext context) {
+			return "/v1/deckCard";
 		}
 	}
 }

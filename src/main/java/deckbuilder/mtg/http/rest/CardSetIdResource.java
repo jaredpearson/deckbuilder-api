@@ -34,9 +34,13 @@ public class CardSetIdResource {
 		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new CardSetModelBuilder(urlFactory, set).build(context);
 	}
-	
+
+	/**
+	 * Creates the URL for the {@link CardSetIdResource}
+	 * @author jared.pearson
+	 */
 	public static class UrlBuilder extends deckbuilder.mtg.http.rest.UrlBuilder {
-		private long id;
+		private final long id;
 		
 		public UrlBuilder(long id) {
 			this.id = id;

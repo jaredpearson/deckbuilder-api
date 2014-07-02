@@ -35,7 +35,7 @@ public class CardResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public Response createCard(CardCreateContext cardData, @Context SecurityContext securityContext) throws Exception {
+	public Response createCard(CardCreateModel cardData, @Context SecurityContext securityContext) throws Exception {
 		//only administrators can create cards
 		if(!securityContext.isUserInRole("administrator")) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -54,8 +54,12 @@ public class CardResource {
 		card = cardService.createCard(card);
 		return Response.ok(new CardSaveContext(card.getId())).build();
 	}
-	
-	public static class CardCreateContext {
+
+	/**
+	 * Data transfer object where the references are simple properties to ID values 
+	 * @author jared.pearson
+	 */
+	public static class CardCreateModel {
 		private String name;
 		private Long set;
 		private String setIndex;

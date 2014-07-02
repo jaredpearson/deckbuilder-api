@@ -6,7 +6,14 @@ import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.entities.User;
 
+/**
+ * Factory for creating URL builders
+ * @author jared.pearson
+ */
 public class EntityUrlFactory {
+	/**
+	 * Creates a new URL builder for the specified entity with the given ID.
+	 */
 	public UrlBuilder createEntityUrl(Class<?> entity, Object id) {
 		
 		if(Card.class.isAssignableFrom(entity)) {

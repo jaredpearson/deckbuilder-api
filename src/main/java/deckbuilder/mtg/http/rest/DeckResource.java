@@ -260,4 +260,15 @@ public class DeckResource {
 			return id;
 		}
 	}
+	
+	/**
+	 * Builds URL instances for the {@link DeckResource}
+	 * @author jared.pearson
+	 */
+	public static class UrlBuilder extends deckbuilder.mtg.http.rest.UrlBuilder {
+		@Override
+		protected String buildPath(BuildContext context) {
+			return "/v1/deck";
+		}
+	}
 }

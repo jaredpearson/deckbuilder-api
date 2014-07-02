@@ -10,6 +10,10 @@ import javax.ws.rs.core.UriInfo;
 import deckbuilder.mtg.Version;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
 
+/**
+ * Factory for building instances of {@link BuildContext}.
+ * @author jared.pearson
+ */
 public class BuildContextFactory {
 	@Inject
 	@Named("currentVersion")
