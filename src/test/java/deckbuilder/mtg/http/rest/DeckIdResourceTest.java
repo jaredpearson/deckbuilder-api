@@ -125,7 +125,10 @@ public class DeckIdResourceTest {
 		verify(deckService).deleteDeck(deck.getId());
 		Assert.assertNotNull("Expected the response to not be null", response);
 		Assert.assertEquals("Expected the response to be 200 OK", 200, response.getStatus());
-		Assert.assertNull("Expected the response entity to be null", response.getEntity());
+		
+		SaveResponse saveResponse = (SaveResponse) response.getEntity();
+		Assert.assertNotNull("Expected the response entity to not be null", saveResponse);
+		Assert.assertTrue("Expected the delete to be successful", saveResponse.getSuccess());
 	}
 	
 	@Test

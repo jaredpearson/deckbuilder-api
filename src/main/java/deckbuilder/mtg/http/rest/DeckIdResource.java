@@ -45,6 +45,7 @@ public class DeckIdResource {
 
 	@POST
 	@Transactional
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDeck(@PathParam("id") Long id, Deck deck, @Context SecurityContext securityContext) throws Exception {
 		final Deck loadedDeck = deckService.getDeckById(id);
 		
@@ -61,6 +62,7 @@ public class DeckIdResource {
 	
 	@DELETE
 	@Transactional
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteDeck(@PathParam("id") Long id, @Context SecurityContext securityContext) throws Exception {
 		final Deck deck = deckService.getDeckById(id);
 		if(deck != null) {
