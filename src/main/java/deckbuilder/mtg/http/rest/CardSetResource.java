@@ -95,10 +95,11 @@ public class CardSetResource {
 	 * Response for when a {@link CardSet} is created
 	 * @author jared.pearson
 	 */
-	public static class CardSetSaveResponse {
+	public static class CardSetSaveResponse extends SaveResponse {
 		private Long id;
 		
 		public CardSetSaveResponse(Long id) {
+			super(true, null);
 			this.id = id;
 		}
 		

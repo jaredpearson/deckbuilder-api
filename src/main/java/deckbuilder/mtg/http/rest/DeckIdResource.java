@@ -19,7 +19,6 @@ import com.google.inject.persist.Transactional;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.http.Principal;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
-import deckbuilder.mtg.http.rest.DeckResource.SaveResponse;
 import deckbuilder.mtg.http.rest.models.DeckModel;
 import deckbuilder.mtg.http.rest.models.DeckModelBuilder;
 import deckbuilder.mtg.service.DeckService;
@@ -52,12 +51,12 @@ public class DeckIdResource {
 		//only the owner can update the deck
 		Principal principal = (Principal)securityContext.getUserPrincipal();
 		if(!securityContext.isUserInRole("administrator") && !loadedDeck.getOwner().equals(principal.getUser())) {
-			return Response.status(Status.FORBIDDEN).entity(new SaveResponse(false, new String[]{"Invalid owner. Only the owner can update the deck."})).build();
+			return Response.status(Status.FORBIDDEN).entity(SaveResponse.fail("Invalid owner. Only the owner can update the deck.")).build();
 		}
 		
 		deck.setId(id);
 		deckService.updateDeck(deck);
-		return Response.ok().build();
+		return Response.ok(SaveResponse.success()).build();
 	}
 	
 	@DELETE
@@ -68,13 +67,13 @@ public class DeckIdResource {
 			//only the owner can update the deck
 			Principal principal = (Principal)securityContext.getUserPrincipal();
 			if(!securityContext.isUserInRole("administrator") && !deck.getOwner().equals(principal.getUser())) {
-				return Response.status(Status.FORBIDDEN).entity(new SaveResponse(false, new String[]{"Invalid owner. Only the owner can delete a deck."})).build();
+				return Response.status(Status.FORBIDDEN).entity(SaveResponse.fail("Invalid owner. Only the owner can delete a deck.")).build();
 			}
 			
 			deckService.deleteDeck(deck.getId());
 		}
 		
-		return Response.ok().build();
+		return Response.ok(SaveResponse.success()).build();
 	}
 	
 	/**

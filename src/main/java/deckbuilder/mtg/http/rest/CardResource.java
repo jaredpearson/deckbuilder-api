@@ -86,10 +86,11 @@ public class CardResource {
 		}
 	}
 	
-	public static class CardSaveContext {
+	public static class CardSaveContext extends SaveResponse {
 		private Long id;
 		
 		public CardSaveContext(Long id) {
+			super(true, null);
 			this.id = id;
 		}
 		

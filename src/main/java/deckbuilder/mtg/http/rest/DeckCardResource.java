@@ -47,10 +47,11 @@ public class DeckCardResource {
 		return new DeckCardSaveContext(deckCard.getId());
 	}
 	
-	public static class DeckCardSaveContext {
+	public static class DeckCardSaveContext extends SaveResponse {
 		private final Long id;
 		
 		public DeckCardSaveContext(Long id) {
+			super(true, null);
 			this.id = id;
 		}
 		
