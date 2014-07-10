@@ -120,6 +120,11 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 		<td>Gets a list of sets</td>
 	</tr>
 	<tr>
+		<td>POST</td>
+		<td><code>/v1/set</code></td>
+		<td>Creates a new card set. This is restricted to users in the administrator group.</td>
+	</tr>
+	<tr>
 		<td>GET</td>
 		<td><code>/v1/set/{id}</code></td>
 		<td>Gets the information about the set with the specified ID</td>
@@ -129,25 +134,20 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 		<td><code>/v1/set/{id}/cards</code></td>
 		<td>Gets the list of cards contained within the set with the specified ID</td>
 	</tr>
-	<tr>
-		<td>POST</td>
-		<td><code>/v1/set</code></td>
-		<td>Creates a new card set. This is restricted to users in the administrator group.</td>
-	</tr>
 </table>
 
 ### Card
 
 <table>
 	<tr>
-		<td>GET</td>
-		<td><code>/v1/card/{id}</code></td>
-		<td>Gets a card with the given ID</td>
-	</tr>
-	<tr>
 		<td>POST</td>
 		<td><code>/v1/card</code></td>
 		<td>Creates a new card. This is restricted to users in the administrator group.</td>
+	</tr>
+	<tr>
+		<td>GET</td>
+		<td><code>/v1/card/{id}</code></td>
+		<td>Gets a card with the given ID</td>
 	</tr>
 </table>
 
@@ -160,14 +160,14 @@ The page should redirect to the Facebook OAuth login page. After signing-in usin
 		<td>Gets a list of decks created by the current user</td>
 	</tr>
 	<tr>
-		<td>GET</td>
-		<td><code>/v1/deck/{id}</code></td>
-		<td>Gets a deck with the given ID</td>
-	</tr>
-	<tr>
 		<td>POST</td>
 		<td><code>/v1/deck</code></td>
 		<td>Creates a new deck. The owner of the deck must be the user requesting to create the deck, unless the user is an administrator. An administrator can create a deck with any user as the owner.</td>
+	</tr>
+	<tr>
+		<td>GET</td>
+		<td><code>/v1/deck/{id}</code></td>
+		<td>Gets a deck with the given ID</td>
 	</tr>
 	<tr>
 		<td>POST</td>
@@ -187,8 +187,18 @@ This is an instance of a card within a deck (along with a given quantity). For e
 
 <table>
 	<tr>
+		<td>GET</td>
+		<td><code>/v1/deck/{id}/cards</code></td>
+		<td>Gets all of the cards associated to the specified deck.</td>
+	</tr>
+	<tr>
 		<td>POST</td>
-		<td><code>/v1/deckCard</code></td>
-		<td>Creates a new deck-to-card association</td>
+		<td><code>/v1/deck/{id}/cards</code></td>
+		<td>Adds a new card to a deck.</td>
+	</tr>
+	<tr>
+		<td>GET</td>
+		<td><code>/v1/deck/{deckId}/cards/{cardId}</code></td>
+		<td>Gets the card association to the deck.</td>
 	</tr>
 </table>

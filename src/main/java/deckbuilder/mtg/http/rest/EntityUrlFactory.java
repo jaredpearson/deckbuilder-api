@@ -3,7 +3,6 @@ package deckbuilder.mtg.http.rest;
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.entities.Deck;
-import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.entities.User;
 
 /**
@@ -24,8 +23,6 @@ public class EntityUrlFactory {
 			return new CardSetIdResource.UrlBuilder((Long)id);
 		} else if(User.class.isAssignableFrom(entity)) {
 			return new UserIdResource.UrlBuilder((Long)id);
-		} else if(DeckCard.class.isAssignableFrom(entity)) {
-			return new DeckCardIdResource.UrlBuilder((Long)id);
 		} else {
 			throw new IllegalArgumentException("Unknown entity specified: " + entity.getClass().getName());
 		}

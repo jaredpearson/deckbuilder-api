@@ -22,6 +22,7 @@ import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
@@ -33,7 +34,7 @@ import deckbuilder.mtg.http.rest.CardResource;
 import deckbuilder.mtg.http.rest.CardSetIdCardsResource;
 import deckbuilder.mtg.http.rest.CardSetIdResource;
 import deckbuilder.mtg.http.rest.CardSetResource;
-import deckbuilder.mtg.http.rest.DeckCardResource;
+import deckbuilder.mtg.http.rest.DeckIdCardsIdResource;
 import deckbuilder.mtg.http.rest.DeckIdCardsResource;
 import deckbuilder.mtg.http.rest.DeckIdResource;
 import deckbuilder.mtg.http.rest.DeckResource;
@@ -112,7 +113,7 @@ public class HttpServer {
 					
 					//setup to serve all resources from the guice container
 					Map<String, String> params = new HashMap<String, String>();
-					params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+					params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
 					params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
 					params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
 					bind(GuiceContainer.class);
@@ -127,7 +128,8 @@ public class HttpServer {
 					final Map<String, String> crossOriginFilterInitParams = Maps.newHashMap();
 					crossOriginFilterInitParams.put("allowedOrigins", config.cors.allowedOrigins);
 					crossOriginFilterInitParams.put("allowedMethods", "GET,POST,HEAD,PATCH,DELETE,OPTIONS");
-					crossOriginFilterInitParams.put("allowedHeaders", "Authorization,authorization");
+					crossOriginFilterInitParams.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "accept,authorization,content-type");
+					crossOriginFilterInitParams.put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, "false");
 					return crossOriginFilterInitParams;
 				}
 			},new JerseyServletModule(){
@@ -150,7 +152,7 @@ public class HttpServer {
 					bind(DeckResource.class).in(Singleton.class);
 					bind(DeckIdResource.class).in(Singleton.class);
 					bind(DeckIdCardsResource.class).in(Singleton.class);
-					bind(DeckCardResource.class).in(Singleton.class);
+					bind(DeckIdCardsIdResource.class).in(Singleton.class);
 					bind(UserResource.class).in(Singleton.class);
 					bind(UserIdResource.class).in(Singleton.class);
 				}

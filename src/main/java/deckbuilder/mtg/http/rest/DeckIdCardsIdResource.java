@@ -15,8 +15,9 @@ import deckbuilder.mtg.http.rest.models.DeckCardModel;
 import deckbuilder.mtg.http.rest.models.DeckCardModelBuilder;
 import deckbuilder.mtg.service.DeckCardService;
 
-@Path("/{version}/deckCard/{id}")
-public class DeckCardIdResource {
+@Path("/{version}/deck/{deckId}/cards/{cardId}")
+public class DeckIdCardsIdResource {
+
 	@Inject
 	EntityUrlFactory urlFactory;
 	
@@ -28,26 +29,29 @@ public class DeckCardIdResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public DeckCardModel getDeckCardById(@Context UriInfo uriInfo, @PathParam("id") Long deckCardId) throws Exception {
-		final DeckCard deckCard = deckCardService.getDeckCardById(deckCardId);
+	public DeckCardModel getDeckCardById(@Context UriInfo uriInfo, @PathParam("deckId") Long deckId, @PathParam("cardId") Long cardId) throws Exception {
+		final DeckCard deckCard = deckCardService.getDeckCardByDeckIdAndCardId(deckId, cardId);
 		final BuildContext context = buildContextFactory.create(uriInfo);
 		return new DeckCardModelBuilder(urlFactory, deckCard).build(context);
 	}
 	
 	/**
-	 * Builder used to create URLs for the {@link DeckCardIdResource}
+	 * Builds URL instances for the {@link DeckIdCardsIdResource}
 	 * @author jared.pearson
 	 */
 	public static class UrlBuilder extends deckbuilder.mtg.http.rest.UrlBuilder {
-		private final long deckCardId;
+		private final long deckId;
+		private final long cardId;
 		
-		public UrlBuilder(long deckCardId) {
-			this.deckCardId = deckCardId;
+		public UrlBuilder(long deckId, long cardId) {
+			this.deckId = deckId;
+			this.cardId = cardId;
 		}
 		
 		@Override
 		protected String buildPath(BuildContext context) {
-			return "/v1/deckCard/" + deckCardId;
+			return "/v1/deck/" + this.deckId + "/cards/" + this.cardId;
 		}
 	}
+	
 }
