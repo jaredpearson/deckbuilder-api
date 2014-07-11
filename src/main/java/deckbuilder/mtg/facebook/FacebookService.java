@@ -53,7 +53,7 @@ public class FacebookService {
 			JsonNode json = getResponseAsJson("https://graph.facebook.com/me?access_token=" + accessToken);
 			
 			HashMap<String, Object> properties = new HashMap<>();
-			properties.put("id", json.path("id").asText());
+			properties.put("id", Long.parseLong(json.path("id").asText()));
 			properties.put("username", json.path("username").asText());
 			
 			return properties;

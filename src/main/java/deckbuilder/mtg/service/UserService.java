@@ -1,10 +1,12 @@
 package deckbuilder.mtg.service;
 
+import javax.annotation.Nonnull;
+
 import deckbuilder.mtg.entities.User;
 
 public interface UserService {
-	public User createUser(User user);
-	public User updateUser(User user);
+	public User createUser(@Nonnull User user);
+	public User updateUser(@Nonnull User user);
 	
 	/**
 	 * Gets the user account associated to the given ID. If the account 
@@ -12,7 +14,7 @@ public interface UserService {
 	 * @param id The ID of the user account.
 	 * @throws NoResultException when no account is found with the specified ID
 	 */
-	public User getUserById(Long id) throws NoResultException;
+	public @Nonnull User getUserById(@Nonnull Long id) throws NoResultException;
 	
 	/**
 	 * Gets the user account associated to the given Facebook account. If the account 
@@ -20,5 +22,13 @@ public interface UserService {
 	 * @param username The username of the Facebook account.
 	 * @throws NoResultException when no account is found with the specified username
 	 */
-	public User getUserByFacebookUsername(String username) throws NoResultException;
+	public @Nonnull User getUserByFacebookUsername(@Nonnull String username) throws NoResultException;
+	
+	/**
+	 * Gets the user account associated to the given Facebook account. If the account 
+	 * cannot be found, a {@link NoResultException} is thrown.
+	 * @param facebookId The ID of the Facebook account.
+	 * @throws NoResultException when no account is found with the specified Facebook ID
+	 */
+	public @Nonnull User getUserByFacebookId(@Nonnull Long facebookId) throws NoResultException;
 }

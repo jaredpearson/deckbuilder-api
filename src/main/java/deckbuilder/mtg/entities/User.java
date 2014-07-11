@@ -17,6 +17,7 @@ public class User {
 	@GenericGenerator(name="increment", strategy="increment")
 	private Long id;
 	private String facebookUsername;
+	private Long facebookId;
 	private boolean administrator = false;
 	
 	public Long getId() {
@@ -33,6 +34,14 @@ public class User {
 	
 	public void setFacebookUsername(String facebookUsername) {
 		this.facebookUsername = facebookUsername;
+	}
+	
+	public Long getFacebookId() {
+		return facebookId;
+	}
+	
+	public void setFacebookId(Long facebookId) {
+		this.facebookId = facebookId;
 	}
 	
 	public boolean isAdministrator() {

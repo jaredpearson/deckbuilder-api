@@ -21,22 +21,25 @@ public class FacebookAuthenticationProvider implements AuthenticationProvider {
 	
 	@Override
 	public User authenticate(final String token) throws AuthenticationException {
-    	Map<String, Object> properties = facebookService.getUserInfo(token);
-    	String username = properties.get("username").toString();
+    	final Map<String, Object> properties = facebookService.getUserInfo(token);
+    	final Long facebookId = (Long)properties.get("id");
+    	if (facebookId == null) {
+    		throw new IllegalStateException("No ID returned from getting the user information from Facebook.");
+    	}
     	
     	User user = null;
     	try {
-    		user = userService.getUserByFacebookUsername(username);
+    		user = userService.getUserByFacebookId(facebookId);
     	} catch(NoResultException exc) {
         	//occurs when the user cannot be found 
-    		logger.finest(String.format("Username %s is not found within UserService.", username));
+    		logger.finest(String.format("Facebook ID %s is not found within UserService.", facebookId));
     	}
     	
     	//if we havent seen this user before, we need to go ahead and create a new user account
     	if(user == null) {
-    		logger.finest(String.format("Creating new user from with Facebook username %s.", username));
+    		logger.finest(String.format("Creating new user from with Facebook ID %s.", facebookId));
     		user = new User();
-    		user.setFacebookUsername(username);
+    		user.setFacebookId(facebookId);
     		userService.createUser(user);
     	}
     	

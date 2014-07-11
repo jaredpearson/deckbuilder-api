@@ -55,6 +55,18 @@ public class DefaultUserService implements UserService {
 		}
 	}
 	
+	@Override
+	public User getUserByFacebookId(Long facebookId) throws NoResultException {
+		assert facebookId != null;
+		try {
+			EntityManager entityManager = entityManagerProvider.get();
+			TypedQuery<User> query = entityManager.createQuery("select u from User u where facebookId = :facebookId", User.class);
+			return query.setParameter("facebookId", facebookId).getSingleResult();
+		} catch(javax.persistence.NoResultException exc) {
+			throw new NoResultException(exc);
+		}
+	}
+	
 	private boolean isAdministrator(User user) {
 		if(user == null) {
 			return false;
