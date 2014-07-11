@@ -83,7 +83,7 @@ public class DeckResource {
 		final Principal principal = (Principal)securityContext.getUserPrincipal();
 		
 		// only let the administrator change the owner of a deck
-		if(!securityContext.isUserInRole("administrator") && deckData.getOwner() != principal.getUser().getId()) {
+		if(deckData.getOwner() != null && deckData.getOwner() != principal.getUser().getId() && !securityContext.isUserInRole("administrator")) {
 			return Response.status(Status.FORBIDDEN).entity(SaveResponse.fail("Invalid owner. Only the current user can be specified as the owner.")).build();
 		}
 		
