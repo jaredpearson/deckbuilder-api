@@ -11,14 +11,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
-import deckbuilder.mtg.http.Principal;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
 import deckbuilder.mtg.http.rest.models.DeckCardsModel;
 import deckbuilder.mtg.http.rest.models.DeckCardsModelBuilder;
@@ -64,10 +62,7 @@ public class DeckIdCardsResource {
 		final Deck deck = deckService.getDeckById(deckId);
 		
 		//only the owner (or admin) can update the deck
-		final Principal principal = (Principal)securityContext.getUserPrincipal();
-		if(!securityContext.isUserInRole("administrator") && !deck.getOwner().equals(principal.getUser())) {
-			return Response.status(Status.FORBIDDEN).entity(SaveResponse.fail("Invalid owner. Only the owner can update the deck.")).build();
-		}
+		DeckHelper.assertOwnerOrAdmin(deck, securityContext);
 		
 		// TODO: make sure the card ID is specified
 		final Card card = cardService.getCardById(deckCardData.getCard());

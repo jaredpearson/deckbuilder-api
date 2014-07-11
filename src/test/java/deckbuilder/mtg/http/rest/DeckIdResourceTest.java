@@ -100,10 +100,14 @@ public class DeckIdResourceTest {
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
-		Response response = resource.updateDeck(deck.getId(), deck, securityContext);
 		
-		Assert.assertNotNull("Expected the response to not be null", response);
-		Assert.assertEquals("Expected the response to 403 Forbidden because the current user is not the owner of the deck.", 403, response.getStatus());
+		try {
+			resource.updateDeck(deck.getId(), deck, securityContext);
+			Assert.fail("Expected an exception to be thrown");
+		} catch(NotAuthorizedException exc) {
+			SaveResponse response = (SaveResponse)exc.getEntity();
+			Assert.assertNotNull("Expected the response to not be null", response);
+		}
 	}
 	
 	@Test
@@ -147,9 +151,13 @@ public class DeckIdResourceTest {
 		
 		DeckIdResource resource = new DeckIdResource();
 		resource.deckService = deckService;
-		Response response = resource.deleteDeck(deck.getId(), securityContext);
-		
-		Assert.assertNotNull("Response should not be null", response);
-		Assert.assertEquals("Expected a 403 Forbidden to be thrown when the user tries to modify a deck they do not own.", 403, response.getStatus());
+
+		try {
+			resource.deleteDeck(deck.getId(), securityContext);
+			Assert.fail("Expected an exception to be thrown");
+		} catch(NotAuthorizedException exc) {
+			SaveResponse response = (SaveResponse)exc.getEntity();
+			Assert.assertNotNull("Expected the response to not be null", response);
+		}
 	}
 }
