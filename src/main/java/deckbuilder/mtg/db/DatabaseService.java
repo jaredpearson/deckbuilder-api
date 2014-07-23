@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.codehaus.jackson.JsonNode;
@@ -19,7 +20,6 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.flywaydb.core.Flyway;
 
 import com.google.common.base.Strings;
-import com.google.inject.Inject;
 
 public class DatabaseService {
 	private static final String PATH_PREFIX_JAR = "jar:";

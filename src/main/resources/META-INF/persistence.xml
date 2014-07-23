@@ -4,17 +4,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
 	
-	<persistence-unit name="deckbuilder.mtg" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+	<persistence-unit name="deckbuilder.mtg">
 		<class>deckbuilder.mtg.entities.User</class>
 		<class>deckbuilder.mtg.entities.CardSet</class>
 		<class>deckbuilder.mtg.entities.Card</class>
 		<class>deckbuilder.mtg.entities.Deck</class>
 		<class>deckbuilder.mtg.entities.DeckCard</class>
-		
-		<properties>
-		    <property name="hibernate.show_sql" value="true" />
-		</properties>
 	</persistence-unit>
 
 </persistence>

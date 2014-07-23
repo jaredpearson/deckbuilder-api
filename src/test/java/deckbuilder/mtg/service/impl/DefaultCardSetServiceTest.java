@@ -16,7 +16,7 @@ public class DefaultCardSetServiceTest extends JpaPersistenceTest {
 		cardSet.setAbbreviation("set");
 		
 		DefaultCardSetService service = new DefaultCardSetService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		
 		CardSet actualCardSet = service.createCardSet(cardSet);
 		

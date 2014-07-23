@@ -2,32 +2,35 @@ package deckbuilder.mtg.service.impl;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Provider;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.NoResultException;
 
+@Transactional(readOnly=true)
 public class DefaultDeckService implements DeckService {
 	
-	@Inject 
-	Provider<EntityManager> entityManagerProvider;
+	@PersistenceContext(unitName="deckbuilder.mtg")
+	EntityManager entityManager;
+	
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 	
 	@Override
 	public List<Deck> getDecksForOwner(Long userId) {
-		EntityManager entityManager = entityManagerProvider.get();
-		TypedQuery<Deck> query = entityManager.createQuery("select d from Deck d where d.owner.id = :owner", Deck.class).setParameter("owner", userId);
+		final TypedQuery<Deck> query = entityManager.createQuery("select d from Deck d where d.owner.id = :owner", Deck.class).setParameter("owner", userId);
 		return query.getResultList();
 	}
 	
 	@Override
 	public Deck getDeckById(Long id) {
-		EntityManager entityManager = entityManagerProvider.get();
-		TypedQuery<Deck> query = entityManager.createQuery("select d from Deck d where d.id = :id", Deck.class).setParameter("id", id);
+		final TypedQuery<Deck> query = entityManager.createQuery("select d from Deck d where d.id = :id", Deck.class).setParameter("id", id);
 		try {
 			return query.getSingleResult();
 		} catch(javax.persistence.NoResultException exc) {
@@ -36,25 +39,25 @@ public class DefaultDeckService implements DeckService {
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public Deck createDeck(Deck deck) {
-		EntityManager entityManager = entityManagerProvider.get();
 		entityManager.persist(deck);
 		return deck;
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public Deck updateDeck(Deck deck) {
-		EntityManager em = entityManagerProvider.get();
-		em.merge(deck);
+		entityManager.merge(deck);
 		return deck;
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public void deleteDeck(Long id) {
-		EntityManager em = entityManagerProvider.get();
-		Deck deck = em.find(Deck.class, id);
+		Deck deck = entityManager.find(Deck.class, id);
 		if(deck != null) {
-			em.remove(deck);
+			entityManager.remove(deck);
 		}
 	}
 }

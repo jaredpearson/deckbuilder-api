@@ -9,18 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.base.Strings;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
+import org.springframework.web.HttpRequestHandler;
 
+import com.google.common.base.Strings;
 import deckbuilder.mtg.facebook.FacebookService;
 
-@Singleton
-public class FacebookAuthServlet extends HttpServlet{
+public class FacebookAuthServlet extends HttpServlet implements HttpRequestHandler {
 	private static final long serialVersionUID = -4564799401018750115L;
 
 	@Inject
-	private Provider<FacebookService> facebookService;
+	private FacebookService facebookService;
+	
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		service(request, response);
+	}
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,7 +32,7 @@ public class FacebookAuthServlet extends HttpServlet{
 		//if the code is provided, it means that the OAuth was successful
 		String code = request.getParameter("code");
 		if(!Strings.isNullOrEmpty(code)) {
-			String accessToken = facebookService.get().getAccessToken(code, currentUrl.toString());
+			String accessToken = facebookService.getAccessToken(code, currentUrl.toString());
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getOutputStream().println(accessToken);
@@ -37,7 +40,7 @@ public class FacebookAuthServlet extends HttpServlet{
 			return;
 		}
 		
-		String requestCodeUrl = facebookService.get().getRequestCodeUrl(currentUrl.toString());
+		String requestCodeUrl = facebookService.getRequestCodeUrl(currentUrl.toString());
 		response.sendRedirect(requestCodeUrl);
 	}
 }

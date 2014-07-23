@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.persist.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
@@ -25,6 +25,7 @@ import deckbuilder.mtg.service.DeckCardService;
 import deckbuilder.mtg.service.DeckService;
 
 @Path("/{version}/deck/{id}/cards")
+@Transactional(readOnly=true)
 public class DeckIdCardsResource {
 	
 	@Inject
@@ -52,7 +53,7 @@ public class DeckIdCardsResource {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
+	@Transactional(readOnly=false)
 	public Response createDeckCard(
 			DeckCardCreateModel deckCardData, 
 			@PathParam("id") Long deckId,

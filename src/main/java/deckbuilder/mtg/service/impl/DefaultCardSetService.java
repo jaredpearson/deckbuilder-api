@@ -3,23 +3,24 @@ package deckbuilder.mtg.service.impl;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import com.google.inject.Provider;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.service.CardSetService;
 import deckbuilder.mtg.service.NoResultException;
 
+@Transactional(readOnly=true)
 public class DefaultCardSetService implements CardSetService {
-	
-	@Inject 
-	Provider<EntityManager> entityManagerProvider;
 
+	@PersistenceContext(unitName="deckbuilder.mtg")
+	EntityManager entityManager;
+	
 	@Override
 	public CardSet getCardSetById(Long id) throws NoSuchElementException {
-		CardSet set = entityManagerProvider.get().find(CardSet.class, id);
+		CardSet set = entityManager.find(CardSet.class, id);
 		if(set == null) {
 			throw new NoResultException();
 		}
@@ -28,12 +29,13 @@ public class DefaultCardSetService implements CardSetService {
 	
 	@Override
 	public List<CardSet> getCardSets() {
-		return entityManagerProvider.get().createQuery("select cs from CardSet cs", CardSet.class).getResultList();
+		return entityManager.createQuery("select cs from CardSet cs", CardSet.class).getResultList();
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public CardSet createCardSet(CardSet cardSet) {
-		entityManagerProvider.get().persist(cardSet);
+		entityManager.persist(cardSet);
 		return cardSet;
 	}
 }

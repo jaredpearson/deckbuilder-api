@@ -1,6 +1,5 @@
 package deckbuilder.mtg.http;
 
-import com.google.inject.persist.Transactional;
 import com.sun.jersey.api.container.MappableContainerException;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
@@ -11,6 +10,8 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Security filter
@@ -23,7 +24,8 @@ public class SecurityFilter implements ContainerRequestFilter {
 	@Inject
 	private FacebookAuthenticationProvider facebookAuthenticationProvider;
 	
-	@Transactional
+	@Override
+	@Transactional(readOnly=false)
     public ContainerRequest filter(ContainerRequest request) {
     	//allow the user to post the user create
     	if(uriInfo.getPath().equals("authUrl") && request.getMethod().equals("GET")) {
@@ -78,11 +80,13 @@ public class SecurityFilter implements ContainerRequestFilter {
             this.principal = new Principal(user);
         }
 
-        public Principal getUserPrincipal() {
+        @Override
+		public Principal getUserPrincipal() {
             return this.principal;
         }
 
-        public boolean isUserInRole(String role) {
+        @Override
+		public boolean isUserInRole(String role) {
         	if("administrator".equalsIgnoreCase(role)) {
         		return user.isAdministrator();
         	}
@@ -90,11 +94,13 @@ public class SecurityFilter implements ContainerRequestFilter {
             return false;
         }
 
-        public boolean isSecure() {
+        @Override
+		public boolean isSecure() {
             return "https".equals(uriInfo.getRequestUri().getScheme());
         }
 
-        public String getAuthenticationScheme() {
+        @Override
+		public String getAuthenticationScheme() {
             return SecurityContext.BASIC_AUTH;
         }
     }

@@ -15,16 +15,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import com.google.inject.Provider;
-
 import deckbuilder.mtg.db.DatabaseService;
 
 public abstract class JpaPersistenceTest {
 	private static final String DATABASE_URL = "jdbc:hsqldb:mem:mymemdb";
 	private static boolean schemaInitialized = false;
-	private static EntityManagerFactory emf = null;
-	protected EntityManager entityManager = null;
-	protected Provider<EntityManager> entityManagerProvider;
+	private static EntityManagerFactory entityManagerFactory = null;
+	private EntityManager entityManager = null;
 
 	@BeforeClass
 	public static void beforeSuite() throws Exception {
@@ -45,26 +42,20 @@ public abstract class JpaPersistenceTest {
 	    properties.put("javax.persistence.jdbc.password", "");
 	    properties.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 	    properties.put("hibernate.show_sql", "true");
-		emf = Persistence.createEntityManagerFactory("deckbuilder.mtg", properties);
+		entityManagerFactory = Persistence.createEntityManagerFactory("deckbuilder.mtg", properties);
 	}
 
 	@AfterClass
 	public static void afterSuite() throws Exception {
-		if(emf != null && emf.isOpen()) {
-			emf.close();
+		if(entityManagerFactory != null && entityManagerFactory.isOpen()) {
+			entityManagerFactory.close();
 		}
 	}
 
 	@Before
 	public void initialize() throws Exception {
 		
-	    entityManager = emf.createEntityManager();
-	    entityManagerProvider = new Provider<EntityManager>() {
-			@Override
-			public EntityManager get() {
-				return entityManager;
-			}
-		};
+	    entityManager = entityManagerFactory.createEntityManager();
 		
 		//start a transaction
 		EntityTransaction entityTransaction = entityManager.getTransaction();
@@ -77,6 +68,14 @@ public abstract class JpaPersistenceTest {
 		if(entityManager != null && entityManager.isOpen()) {
 			entityManager.close();
 		}
+	}
+	
+	public EntityManagerFactory getEntityManagerFactory() {
+		return entityManagerFactory;
+	}
+	
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 	
 	protected void rollbackIfActive() {

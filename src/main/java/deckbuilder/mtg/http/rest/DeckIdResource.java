@@ -13,7 +13,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.persist.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
@@ -22,9 +23,10 @@ import deckbuilder.mtg.http.rest.models.DeckModelBuilder;
 import deckbuilder.mtg.service.DeckService;
 
 @Path("/{version}/deck/{id}")
+@Transactional(readOnly=true)
 public class DeckIdResource {
 	
-	@Inject
+	@Autowired
 	EntityUrlFactory urlFactory;
 	
 	@Inject
@@ -42,7 +44,7 @@ public class DeckIdResource {
 	}
 
 	@POST
-	@Transactional
+	@Transactional(readOnly=false)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDeck(@PathParam("id") Long id, Deck deck, @Context SecurityContext securityContext) throws Exception {
 		final Deck loadedDeck = deckService.getDeckById(id);
@@ -56,7 +58,7 @@ public class DeckIdResource {
 	}
 	
 	@DELETE
-	@Transactional
+	@Transactional(readOnly=false)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteDeck(@PathParam("id") Long id, @Context SecurityContext securityContext) throws Exception {
 		final Deck deck = deckService.getDeckById(id);

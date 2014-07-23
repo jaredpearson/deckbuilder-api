@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
-import com.google.inject.persist.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.CardSet;
@@ -21,6 +21,7 @@ import deckbuilder.mtg.service.CardSetService;
 @Singleton
 @Path("/{version}/card")
 @Produces(MediaType.APPLICATION_JSON)
+@Transactional(readOnly=true)
 public class CardResource {
 	
 	@Inject
@@ -34,7 +35,7 @@ public class CardResource {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
+	@Transactional(readOnly=false)
 	public Response createCard(CardCreateModel cardData, @Context SecurityContext securityContext) throws Exception {
 		//only administrators can create cards
 		if(!securityContext.isUserInRole("administrator")) {

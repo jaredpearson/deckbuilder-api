@@ -14,9 +14,10 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.inject.persist.Transactional;
 
 import deckbuilder.mtg.entities.CardSet;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
@@ -27,6 +28,7 @@ import deckbuilder.mtg.service.CardSetService;
 
 @Path("/{version}/set")
 @Produces(MediaType.APPLICATION_JSON)
+@Transactional(readOnly=true)
 public class CardSetResource {
 	
 	@Inject
@@ -54,7 +56,7 @@ public class CardSetResource {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
+	@Transactional(readOnly=false)
 	public Response createCardSet(CardSetCreateModel cardSetData, @Context SecurityContext securityContext) throws Exception {
 		
 		//only administrators can create card sets

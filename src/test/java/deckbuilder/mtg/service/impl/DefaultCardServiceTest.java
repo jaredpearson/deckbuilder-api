@@ -15,16 +15,16 @@ public class DefaultCardServiceTest extends JpaPersistenceTest {
 		cardSet.setName("Set");
 		cardSet.setLanguage("en");
 		cardSet.setAbbreviation("set");
-		entityManager.persist(cardSet);
+		getEntityManager().persist(cardSet);
 		
 		Card card = new Card();
 		card.setName("Test");
 		card.setSet(cardSet);
-		entityManager.persist(card);
-		entityManager.flush();
+		getEntityManager().persist(card);
+		getEntityManager().flush();
 		
 		DefaultCardService service = new DefaultCardService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		
 		Card actualCard = service.getCardById(card.getId());
 		
@@ -39,14 +39,14 @@ public class DefaultCardServiceTest extends JpaPersistenceTest {
 		cardSet.setName("Set");
 		cardSet.setLanguage("en");
 		cardSet.setAbbreviation("set");
-		entityManager.persist(cardSet);
+		getEntityManager().persist(cardSet);
 		
 		Card card = new Card();
 		card.setName("Test");
 		card.setSet(cardSet);
 		
 		DefaultCardService service = new DefaultCardService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		
 		Card actualCard = service.createCard(card);
 		Assert.assertNotNull("Expected createCard to create the card", actualCard);

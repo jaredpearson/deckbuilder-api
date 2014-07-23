@@ -16,11 +16,11 @@ public class DefaultDeckServiceTest extends JpaPersistenceTest{
 		
 		Deck deck = new Deck();
 		deck.setOwner(user);
-		entityManager.persist(deck);
-		entityManager.flush();
+		getEntityManager().persist(deck);
+		getEntityManager().flush();
 
 		DefaultDeckService service = new DefaultDeckService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		List<Deck> decks = service.getDecksForOwner(user.getId());
 		
 		Assert.assertEquals("Expected list to return all available decks", 1, decks.size());
@@ -30,14 +30,14 @@ public class DefaultDeckServiceTest extends JpaPersistenceTest{
 	@Test
 	public void testCreateDeck() throws Exception {
 		User user = createTestUser();
-		entityManager.flush();
+		getEntityManager().flush();
 
 		Deck deckData = new Deck();
 		deckData.setName("Test");
 		deckData.setOwner(user);
 		
 		DefaultDeckService service = new DefaultDeckService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		Deck saveResponse = service.createDeck(deckData);
 		
 		Assert.assertNotNull("Expected createDeck to return a save response.", saveResponse);
@@ -45,7 +45,7 @@ public class DefaultDeckServiceTest extends JpaPersistenceTest{
 		Long newDeckId = saveResponse.getId();
 		Assert.assertNotNull("Expected the save response to return the deck ID", newDeckId);
 		
-		Deck deck = entityManager.find(Deck.class, newDeckId);
+		Deck deck = getEntityManager().find(Deck.class, newDeckId);
 		Assert.assertNotNull("Expected the createDeck method to create a deck", deck);
 	}
 	
@@ -55,15 +55,15 @@ public class DefaultDeckServiceTest extends JpaPersistenceTest{
 		
 		Deck deck = new Deck();
 		deck.setOwner(owner);
-		entityManager.persist(deck);
-		entityManager.flush();
+		getEntityManager().persist(deck);
+		getEntityManager().flush();
 
 		DefaultDeckService service = new DefaultDeckService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		service.deleteDeck(deck.getId());
 		
-		entityManager.flush();
-		Deck actual = entityManager.find(Deck.class, deck.getId());
+		getEntityManager().flush();
+		Deck actual = getEntityManager().find(Deck.class, deck.getId());
 		Assert.assertNull("Expected the deck to be deleted", actual);
 	}
 	
@@ -73,24 +73,24 @@ public class DefaultDeckServiceTest extends JpaPersistenceTest{
 		
 		Deck deck = new Deck();
 		deck.setOwner(owner);
-		entityManager.persist(deck);
-		entityManager.flush();
+		getEntityManager().persist(deck);
+		getEntityManager().flush();
 		
 		//change the deck name
 		deck.setName("New Name!");
 
 		DefaultDeckService service = new DefaultDeckService();
-		service.entityManagerProvider = entityManagerProvider;
+		service.entityManager = getEntityManager();
 		service.updateDeck(deck);
 		
-		Deck actualDeck = entityManager.find(Deck.class, deck.getId());
+		Deck actualDeck = getEntityManager().find(Deck.class, deck.getId());
 		Assert.assertNotNull("Expected the deck to be found with the ID", actualDeck);
 		Assert.assertEquals("Expected the name of the deck to have changed after the update", deck.getName(), actualDeck.getName());
 	}
 	
 	private User createTestUser() {
 		User owner = new User();
-		entityManager.persist(owner);
+		getEntityManager().persist(owner);
 		return owner;
 	}
 	

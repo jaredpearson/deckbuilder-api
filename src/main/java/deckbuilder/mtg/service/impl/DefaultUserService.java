@@ -2,26 +2,28 @@ package deckbuilder.mtg.service.impl;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Provider;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.Configuration;
 import deckbuilder.mtg.entities.User;
 import deckbuilder.mtg.service.NoResultException;
 import deckbuilder.mtg.service.UserService;
 
+@Transactional(readOnly=true)
 public class DefaultUserService implements UserService {
-	
-	@Inject
-	Provider<EntityManager> entityManagerProvider;
+
+	@PersistenceContext(unitName="deckbuilder.mtg")
+	EntityManager entityManager;
 	
 	@Inject
 	Configuration configuration;
 	
 	@Override
 	public User getUserById(Long id) {
-		User user = entityManagerProvider.get().find(User.class, id);
+		User user = entityManager.find(User.class, id);
 		if(user == null) {
 			throw new NoResultException();
 		}
@@ -29,25 +31,26 @@ public class DefaultUserService implements UserService {
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public User createUser(User user) {
 		if(isAdministrator(user)) {
 			user.setAdministrator(true);
 		}
 		
-		entityManagerProvider.get().persist(user);
+		entityManager.persist(user);
 		return user;
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public User updateUser(User user) {
-		entityManagerProvider.get().merge(user);
+		entityManager.merge(user);
 		return user;
 	}
 	
 	@Override
 	public User getUserByFacebookUsername(String username) {
 		try {
-			EntityManager entityManager = entityManagerProvider.get();
 			TypedQuery<User> query = entityManager.createQuery("select u from User u where lower(facebookUsername) = :username", User.class);
 			return query.setParameter("username", toLowercase(username)).getSingleResult();
 		} catch(javax.persistence.NoResultException exc) {
@@ -59,7 +62,6 @@ public class DefaultUserService implements UserService {
 	public User getUserByFacebookId(Long facebookId) throws NoResultException {
 		assert facebookId != null;
 		try {
-			EntityManager entityManager = entityManagerProvider.get();
 			TypedQuery<User> query = entityManager.createQuery("select u from User u where facebookId = :facebookId", User.class);
 			return query.setParameter("facebookId", facebookId).getSingleResult();
 		} catch(javax.persistence.NoResultException exc) {

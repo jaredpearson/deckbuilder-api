@@ -20,10 +20,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
-import com.google.inject.persist.UnitOfWork;
-
 import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
@@ -37,6 +33,7 @@ import deckbuilder.mtg.service.DeckService;
 import deckbuilder.mtg.service.UserService;
 
 @Path("/{version}/deck")
+@org.springframework.transaction.annotation.Transactional
 public class DeckResource {
 	
 	@Inject
@@ -53,9 +50,6 @@ public class DeckResource {
 	
 	@Inject
 	CardService cardService;
-	
-	@Inject
-	Provider<UnitOfWork> unitOfWork;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -76,7 +70,6 @@ public class DeckResource {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
 	public @Nonnull Response createDeck(DeckCreateModel deckData, @Context SecurityContext securityContext) throws Exception {
 		assert deckData != null;
 		assert securityContext != null;

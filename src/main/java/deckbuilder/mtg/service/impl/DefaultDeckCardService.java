@@ -1,28 +1,31 @@
 package deckbuilder.mtg.service.impl;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.google.inject.Provider;
+import org.springframework.transaction.annotation.Transactional;
 
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.service.DeckCardService;
 import deckbuilder.mtg.service.NoResultException;
 
+@Transactional(readOnly=true)
 public class DefaultDeckCardService implements DeckCardService {
-	@Inject
-	Provider<EntityManager> entityManagerProvider;
+
+	@PersistenceContext(unitName="deckbuilder.mtg")
+	EntityManager entityManager;
 	
 	@Override
+	@Transactional(readOnly=false)
 	public DeckCard createDeckCard(DeckCard deckCard) {
-		entityManagerProvider.get().persist(deckCard);
+		entityManager.persist(deckCard);
 		return deckCard;
 	}
 	
 	@Override
 	public DeckCard getDeckCardById(Long deckCardId) {
-		final DeckCard deckCard = entityManagerProvider.get().find(DeckCard.class, deckCardId);
+		final DeckCard deckCard = entityManager.find(DeckCard.class, deckCardId);
 		if (deckCard == null) {
 			throw new NoResultException();
 		}
@@ -31,7 +34,7 @@ public class DefaultDeckCardService implements DeckCardService {
 	
 	@Override
 	public DeckCard getDeckCardByDeckIdAndCardId(Long deckId, Long cardId) {
-		final TypedQuery<DeckCard> query = entityManagerProvider.get().createQuery("select dc from DeckCard dc join dc.deck d join dc.card c where d.id = :deckId and c.id = :cardId", DeckCard.class);
+		final TypedQuery<DeckCard> query = entityManager.createQuery("select dc from DeckCard dc join dc.deck d join dc.card c where d.id = :deckId and c.id = :cardId", DeckCard.class);
 		query.setParameter("deckId", cardId);
 		query.setParameter("cardId", cardId);
 		final DeckCard deckCard = query.getSingleResult();
