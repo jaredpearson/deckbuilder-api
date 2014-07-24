@@ -29,6 +29,9 @@ import deckbuilder.mtg.http.rest.UserResource;
  * Note: The use SCOPE_SINGLETON is because the Spring-to-Jersey integration
  * uses the annotation value. The default scope (value of "") is unknown to 
  * the Spring-to-Jersey integration and fails.
+ * <p>
+ * If you create a class outside of the deckbuilder.mtg.http.rest package, make sure
+ * to register the page to the {@link deckbuilder.mtg.http.HttpServer.JerseyApplicationConfig} class.
  * @author jared.pearson
  *
  */

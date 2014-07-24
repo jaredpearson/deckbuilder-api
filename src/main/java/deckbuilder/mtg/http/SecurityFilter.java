@@ -1,13 +1,15 @@
 package deckbuilder.mtg.http;
 
-import com.sun.jersey.api.container.MappableContainerException;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
+import java.io.IOException;
 
 import deckbuilder.mtg.entities.User;
 
 import javax.inject.Inject;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,31 +28,32 @@ public class SecurityFilter implements ContainerRequestFilter {
 	
 	@Override
 	@Transactional(readOnly=false)
-    public ContainerRequest filter(ContainerRequest request) {
-    	//allow the user to post the user create
+	public void filter(ContainerRequestContext requestContext) throws IOException {
+		Request request = requestContext.getRequest();
+		
+		//allow the user to post the user create
     	if(uriInfo.getPath().equals("authUrl") && request.getMethod().equals("GET")) {
-    		return request;
+    		return;
     	}
     	
     	//allow the OPTIONS to bypass the filter
     	if(request.getMethod().equals("OPTIONS")) {
-    		return request;
+    		return;
     	}
     	
     	try {
-	    	User user = authenticate(request);
-	        request.setSecurityContext(new Authorizer(user));
-	        return request;
+	    	User user = authenticate(requestContext);
+	    	requestContext.setSecurityContext(new Authorizer(user));
     	} catch(AuthenticationException exc) {
-    		throw new MappableContainerException(exc);
+    		requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized").build());
     	}
-    }
-
-    private User authenticate(ContainerRequest request) throws AuthenticationException {
+	}
+	
+    private User authenticate(ContainerRequestContext request) throws AuthenticationException {
     	// Extract authentication credentials
-        String authentication = request.getHeaderValue(ContainerRequest.AUTHORIZATION);
+        String authentication = request.getHeaders().getFirst("authorization");
         if(authentication == null) {
-            throw new MappableContainerException(new AuthenticationException("Authentication credentials are required"));
+            throw new AuthenticationException("Authentication credentials are required");
         }
         
         User user = null;

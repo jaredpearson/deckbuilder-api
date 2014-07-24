@@ -14,17 +14,17 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.jackson1.Jackson1Feature;
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.HttpRequestHandlerServlet;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.google.common.collect.Maps;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 
 import deckbuilder.mtg.Configuration;
 
@@ -97,11 +97,9 @@ public class HttpServer {
 	
 	private ServletHolder createJerseyServletHolder() {
 		final Map<String, String> params = new HashMap<String, String>();
-		params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-		params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
-		params.put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, SecurityFilter.class.getName());
+		params.put("javax.ws.rs.Application", JerseyApplicationConfig.class.getName());
 		
-		final ServletHolder jerseyServletHolder = new ServletHolder(SpringServlet.class);
+		final ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
 		jerseyServletHolder.setInitParameters(params);
 		return jerseyServletHolder;
 	}
@@ -116,5 +114,19 @@ public class HttpServer {
 		final FilterHolder crossOriginFilterHolder = new FilterHolder(CrossOriginFilter.class);
 		crossOriginFilterHolder.setInitParameters(crossOriginFilterInitParams);
 		return crossOriginFilterHolder;
+	}
+	
+	/**
+	 * Jersey application config
+	 * @author jared.pearson
+	 */
+	public static class JerseyApplicationConfig extends org.glassfish.jersey.server.ResourceConfig {
+		public JerseyApplicationConfig() {
+			register(RequestContextFilter.class);
+			register(SecurityFilter.class);
+			register(Jackson1Feature.class);
+			
+			packages("deckbuilder.mtg.http.rest");
+		}
 	}
 }
