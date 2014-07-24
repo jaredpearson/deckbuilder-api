@@ -97,6 +97,7 @@ public class HttpServer {
 	
 	private ServletHolder createJerseyServletHolder() {
 		final Map<String, String> params = new HashMap<String, String>();
+		params.put("jersey.config.server.wadl.disableWadl", "true");
 		params.put("javax.ws.rs.Application", JerseyApplicationConfig.class.getName());
 		
 		final ServletHolder jerseyServletHolder = new ServletHolder(ServletContainer.class);
