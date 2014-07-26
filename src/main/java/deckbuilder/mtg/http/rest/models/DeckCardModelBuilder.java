@@ -2,7 +2,6 @@ package deckbuilder.mtg.http.rest.models;
 
 import javax.annotation.Nonnull;
 
-import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.http.rest.Builder;
@@ -17,7 +16,7 @@ public class DeckCardModelBuilder implements Builder<DeckCardModel> {
 	private final UrlBuilder url;
 	private final long id;
 	private final int quantity;
-	private final UrlBuilder cardUrl;
+	private final CardModelBuilder cardModelBuilder;
 	private final UrlBuilder deckUrl;
 	
 	/**
@@ -29,15 +28,15 @@ public class DeckCardModelBuilder implements Builder<DeckCardModel> {
 		this.url = new DeckIdCardsIdResource.UrlBuilder(deckCard.getDeck().getId(), deckCard.getCard().getId());
 		this.id = deckCard.getId();
 		this.quantity = (deckCard.getQuantity() == null) ? 1 : deckCard.getQuantity();
-		this.cardUrl = urlFactory.createEntityUrl(Card.class, deckCard.getCard().getId());
+		this.cardModelBuilder = new CardModelBuilder(urlFactory, deckCard.getCard());
 		this.deckUrl = urlFactory.createEntityUrl(Deck.class, deckCard.getDeck().getId());
 	}
 	
 	@Override
 	public DeckCardModel build(BuildContext context) {
 		final String url = this.url.build(context);
-		final String cardUrl = this.cardUrl.build(context);
+		final CardModel card = this.cardModelBuilder.build(context);
 		final String deckUrl = this.deckUrl.build(context);
-		return new DeckCardModel(url, this.id, this.quantity, cardUrl, deckUrl);
+		return new DeckCardModel(url, this.id, this.quantity, card, deckUrl);
 	}
 }

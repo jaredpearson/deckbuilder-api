@@ -9,15 +9,15 @@ public class DeckCardModel implements Serializable {
 	private final String url;
 	private final long id;
 	private final int quantity;
-	private final String cardUrl;
+	private final CardModel card;
 	private final String deckUrl;
 
-	public DeckCardModel(@Nonnull String url, long id, int quantity, @Nonnull String cardUrl, @Nonnull String deckUrl) {
+	public DeckCardModel(@Nonnull String url, long id, int quantity, @Nonnull CardModel card, @Nonnull String deckUrl) {
 		assert url != null;
 		this.url = url;
 		this.id = id;
 		this.quantity = quantity;
-		this.cardUrl = cardUrl;
+		this.card = card;
 		this.deckUrl = deckUrl;
 	}
 	
@@ -33,8 +33,8 @@ public class DeckCardModel implements Serializable {
 		return quantity;
 	}
 	
-	public String getCardUrl() {
-		return cardUrl;
+	public CardModel getCard() {
+		return card;
 	}
 	
 	public String getDeckUrl() {
