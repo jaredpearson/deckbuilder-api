@@ -18,6 +18,7 @@ import deckbuilder.mtg.entities.Card;
 import deckbuilder.mtg.entities.Deck;
 import deckbuilder.mtg.entities.DeckCard;
 import deckbuilder.mtg.http.rest.Builder.BuildContext;
+import deckbuilder.mtg.http.rest.models.DeckCardModelBuilder;
 import deckbuilder.mtg.http.rest.models.DeckCardsModel;
 import deckbuilder.mtg.http.rest.models.DeckCardsModelBuilder;
 import deckbuilder.mtg.service.CardService;
@@ -57,6 +58,7 @@ public class DeckIdCardsResource {
 	public Response createDeckCard(
 			DeckCardCreateModel deckCardData, 
 			@PathParam("id") Long deckId,
+			@Context UriInfo uriInfo,
 			@Context SecurityContext securityContext) throws Exception {
 		
 		// TODO: make sure the deck card isn't already created
@@ -77,7 +79,8 @@ public class DeckIdCardsResource {
 		}
 		
 		deckCardService.createDeckCard(deckCard);
-		return Response.ok(new DeckCardSaveContext(deckCard.getId())).build();
+		final BuildContext context = buildContextFactory.create(uriInfo);
+		return Response.ok(new DeckCardModelBuilder(urlFactory, deckCard).build(context)).build();
 	}
 	
 	/**
@@ -94,19 +97,6 @@ public class DeckIdCardsResource {
 		@Override
 		protected String buildPath(BuildContext context) {
 			return "/v1/deck/" + id + "/cards";
-		}
-	}
-
-	public static class DeckCardSaveContext extends SaveResponse {
-		private final Long id;
-		
-		public DeckCardSaveContext(Long id) {
-			super(true, null);
-			this.id = id;
-		}
-		
-		public Long getId() {
-			return id;
 		}
 	}
 
