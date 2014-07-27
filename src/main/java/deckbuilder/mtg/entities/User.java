@@ -51,10 +51,6 @@ public class User {
 	public void setAdministrator(boolean administrator) {
 		this.administrator = administrator;
 	}
-	
-	public boolean getAdministrator() {
-		return administrator;
-	}
 
 	@Override
 	public int hashCode() {
