@@ -17,6 +17,7 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 	private UrlBuilder url;
 	private Long id;
 	private String name;
+	private int numberOfCards;
 	private UrlBuilder cardsUrl;
 	private UrlBuilder ownerUrl;
 	
@@ -30,6 +31,7 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 		this.url = urlFactory.createEntityUrl(Deck.class, deck.getId());
 		this.id = deck.getId();
 		this.name = deck.getName();
+		this.numberOfCards = deck.getNumberOfCards();
 		this.cardsUrl = new DeckIdCardsResource.UrlBuilder(deck.getId());
 		this.ownerUrl = urlFactory.createEntityUrl(User.class, deck.getOwner().getId());
 	}
@@ -57,6 +59,14 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getNumberOfCards() {
+		return numberOfCards;
+	}
+	
+	public void setNumberOfCards(int numberOfCards) {
+		this.numberOfCards = numberOfCards;
+	}
 
 	public UrlBuilder getCardsUrl() {
 		return cardsUrl;
@@ -74,10 +84,11 @@ public class DeckModelBuilder implements Builder<DeckModel> {
 		this.ownerUrl = ownerUrl;
 	}
 
+	@Override
 	public DeckModel build(BuildContext context) {
 		String url = this.url.build(context);
 		String cardsUrl = this.cardsUrl.build(context);
 		String ownerUrl = this.ownerUrl.build(context);
-		return new DeckModel(url, id, name, cardsUrl, ownerUrl);
+		return new DeckModel(url, id, name, numberOfCards, cardsUrl, ownerUrl);
 	}
 }

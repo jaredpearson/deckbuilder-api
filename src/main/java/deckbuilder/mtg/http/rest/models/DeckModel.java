@@ -9,6 +9,7 @@ public class DeckModel implements Serializable {
 	private final String url;
 	private final long id;
 	private final String name;
+	private final int numberOfCards;
 	private final String cardsUrl;
 	private final String ownerUrl;
 	
@@ -16,6 +17,7 @@ public class DeckModel implements Serializable {
 			@Nonnull String url, 
 			long id, 
 			@Nonnull String name, 
+			int numberOfCards,
 			@Nonnull String cardsUrl, 
 			@Nonnull String ownerUrl) {
 		assert url != null;
@@ -25,6 +27,7 @@ public class DeckModel implements Serializable {
 		this.url = url;
 		this.id = id;
 		this.name = name;
+		this.numberOfCards = numberOfCards;
 		this.cardsUrl = cardsUrl;
 		this.ownerUrl = ownerUrl;
 	}
@@ -45,6 +48,13 @@ public class DeckModel implements Serializable {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Gets the number of cards within the deck
+	 */
+	public int getNumberOfCards() {
+		return numberOfCards;
 	}
 	
 	public String getCardsUrl() {

@@ -63,4 +63,15 @@ public class Deck {
 	public void setCards(List<DeckCard> cards) {
 		this.cards = cards;
 	}
+	
+	/**
+	 * Gets the number of cards within the deck
+	 */
+	public int getNumberOfCards() {
+		int count = 0;
+		for(DeckCard deckCard : this.cards) {
+			count += (deckCard.getQuantity() == null) ? 0 : deckCard.getQuantity();
+		}
+		return count;
+	}
 }
