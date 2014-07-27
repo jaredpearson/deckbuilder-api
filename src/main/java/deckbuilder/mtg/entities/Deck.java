@@ -68,6 +68,10 @@ public class Deck {
 	 * Gets the number of cards within the deck
 	 */
 	public int getNumberOfCards() {
+		if (this.cards == null) {
+			return 0;
+		}
+		
 		int count = 0;
 		for(DeckCard deckCard : this.cards) {
 			count += (deckCard.getQuantity() == null) ? 0 : deckCard.getQuantity();
