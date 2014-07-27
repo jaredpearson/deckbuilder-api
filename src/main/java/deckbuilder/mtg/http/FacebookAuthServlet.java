@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.HttpRequestHandler;
 
 import com.google.common.base.Strings;
+
+import deckbuilder.mtg.facebook.FacebookException;
 import deckbuilder.mtg.facebook.FacebookService;
 
 public class FacebookAuthServlet extends HttpServlet implements HttpRequestHandler {
@@ -32,15 +34,21 @@ public class FacebookAuthServlet extends HttpServlet implements HttpRequestHandl
 		//if the code is provided, it means that the OAuth was successful
 		String code = request.getParameter("code");
 		if(!Strings.isNullOrEmpty(code)) {
-			String accessToken = facebookService.getAccessToken(code, currentUrl.toString());
-			response.setContentType("text/plain");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getOutputStream().println(accessToken);
-			response.getOutputStream().flush();
-			return;
+			try {
+				String accessToken = facebookService.getAccessToken(code, currentUrl.toString());
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getOutputStream().println(accessToken);
+				response.getOutputStream().flush();
+			} catch(FacebookException exc) {
+				response.setContentType("text/plain");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getOutputStream().println(exc.getErrorMessage());
+				response.getOutputStream().flush();
+			}
+		} else {
+			String requestCodeUrl = facebookService.getRequestCodeUrl(currentUrl.toString());
+			response.sendRedirect(requestCodeUrl);
 		}
-		
-		String requestCodeUrl = facebookService.getRequestCodeUrl(currentUrl.toString());
-		response.sendRedirect(requestCodeUrl);
 	}
 }

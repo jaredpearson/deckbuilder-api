@@ -48,7 +48,7 @@ public class FacebookService {
 	/**
 	 * Given an access token, the user's information is retrieved from Facebook
 	 */
-	public Map<String, Object> getUserInfo(String accessToken) {
+	public Map<String, Object> getUserInfo(String accessToken) throws FacebookException {
 		try {
 			JsonNode json = getResponseAsJson("https://graph.facebook.com/me?access_token=" + accessToken);
 			
@@ -65,7 +65,7 @@ public class FacebookService {
 	/**
 	 * Given an access code, an access token is requested.
 	 */
-	public String getAccessToken(String code, String returnUrl) {
+	public String getAccessToken(String code, String returnUrl) throws FacebookException {
 		try {
 			String url = "https://graph.facebook.com/oauth/access_token?" + 
 					"client_id=" + apiKey + 
@@ -96,7 +96,7 @@ public class FacebookService {
         return new String(baos.toByteArray());
 	}
 	
-	private JsonNode getResponseAsJson(String url) throws IOException {
+	private JsonNode getResponseAsJson(String url) throws IOException, FacebookException {
 		return (JsonNode) request(url, new ConnectionHandler() {
 			@Override
 			public Object handle(HttpURLConnection connection) throws IOException {
@@ -109,7 +109,7 @@ public class FacebookService {
 		});
 	}
 	
-	private Object request(String url, ConnectionHandler handler) throws IOException {
+	private Object request(String url, ConnectionHandler handler) throws IOException, FacebookException {
 		HttpURLConnection connection = null;
 		try {
 			URL u = new URL(url);
@@ -120,8 +120,26 @@ public class FacebookService {
 				return handler.handle(connection);
 			} else {
 				try(InputStream inputStream = connection.getErrorStream()) {
-					String responseBody = inputStreamToString(inputStream);
-					throw new RuntimeException(responseBody);
+					final String responseBody = inputStreamToString(inputStream);
+					
+					// attempt to convert to JSON to get the error message 
+					try {
+						
+						final ObjectMapper mapper = new ObjectMapper();
+						final JsonNode node = mapper.readTree(inputStream);
+						
+						final JsonNode errorNode = node.get("error");
+						final String errorMessage = errorNode.get("message").asText();
+						final String errorType = errorNode.get("type").asText();
+						final int errorCode = errorNode.get("code").asInt();
+						final int errorSubcode = errorNode.get("error_subcode").asInt();
+						
+						throw new FacebookException(responseBody, errorMessage, errorType, errorCode, errorSubcode);
+						
+					} catch(Throwable t) {
+						throw new FacebookException(responseBody);
+					}
+					
 				}
 			}
 			

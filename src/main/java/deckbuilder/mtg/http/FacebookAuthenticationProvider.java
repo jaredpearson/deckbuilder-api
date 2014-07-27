@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import deckbuilder.mtg.entities.User;
+import deckbuilder.mtg.facebook.FacebookException;
 import deckbuilder.mtg.facebook.FacebookService;
 import deckbuilder.mtg.service.NoResultException;
 import deckbuilder.mtg.service.UserService;
@@ -21,7 +22,13 @@ public class FacebookAuthenticationProvider implements AuthenticationProvider {
 	
 	@Override
 	public User authenticate(final String token) throws AuthenticationException {
-    	final Map<String, Object> properties = facebookService.getUserInfo(token);
+    	Map<String, Object> properties = null;
+    	try {
+    		properties = facebookService.getUserInfo(token);
+    	} catch(FacebookException exc) {
+    		throw new AuthenticationException("Facebook error occurred", exc);
+    	}
+    	
     	final Long facebookId = (Long)properties.get("id");
     	if (facebookId == null) {
     		throw new IllegalStateException("No ID returned from getting the user information from Facebook.");
